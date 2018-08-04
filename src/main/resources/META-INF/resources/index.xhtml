@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Character management</title>
+</h:head>
+
+<h:body>
+    <h:form >
+
+        <p:panel header="Character Management">
+            <!--<h:panelGrid columns="2" cellpadding="4">-->
+                <!--<h:outputText value="First Name: "/>-->
+                <!--<p:inputText id="first-name" value="#{helloWorld.firstName}"/>-->
+<!---->
+                <!--<h:outputText value="Last Name: "/>-->
+                <!--<p:inputText id="last-name" value="#{helloWorld.lastName}"/>-->
+<!---->
+                <!--<p:commandButton id="submit" value="Submit" update="greeting"-->
+                                 <!--oncomplete="PF('greetingDialog').show()"/>-->
+            <!--</h:panelGrid>-->
+
+
+            <p:dataTable var="ch" value="#{characterController.characterList}" id="dataTable">
+                <p:column headerText="GUID">
+                    <h:outputText value="#{ch.guid}" />
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{ch.name}" />
+                </p:column>
+
+                <p:column headerText="Account ID">
+                    <h:outputText value="#{ch.account}" />
+                </p:column>
+
+                <p:column headerText="Class">
+                    <h:outputText value="#{ch.characterClass}" />
+                </p:column>
+
+                <p:column headerText="Race">
+                    <h:outputText value="#{ch.race}" />
+                </p:column>
+
+                <p:column headerText="Gender">
+                    <h:outputText value="#{ch.gender}" />
+                </p:column>
+
+                <p:column headerText="Modify attributes">
+                    <p:commandButton />
+                </p:column>
+
+                <p:column headerText="Modify equipment">
+                    <p:commandButton />
+                </p:column>
+
+                <p:column headerText="Delete">
+                    <p:commandButton />
+                </p:column>
+
+            </p:dataTable>
+
+                <h:outputLabel for="account" value="Account ID:" style="font-weight:bold" />
+                <p:inputText id="account" value="#{characterController.accountId}" />
+                <p:commandButton value="Filter" action="#{characterController.filterByAccount}" update="dataTable" />
+        </p:panel>
+
+        <p:commandButton value="Add character" action="add.xhtml" />
+
+        <!--<p:dialog header="Greeting" widgetVar="greetingDialog"-->
+                  <!--modal="true" resizable="false">-->
+            <!--<h:panelGrid id="greeting" columns="1" cellpadding="4">-->
+                <!--<h:outputText value="#{helloWorld.showGreeting()}"/>-->
+            <!--</h:panelGrid>-->
+        <!--</p:dialog>-->
+
+    </h:form>
+</h:body>
+</html>
