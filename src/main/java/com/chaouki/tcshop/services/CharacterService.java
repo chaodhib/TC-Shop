@@ -12,9 +12,5 @@ import java.util.List;
  */
 public interface CharacterService {
 
-    List<Character> findAll();
-
     List<Character> findByAccount(Integer account);
-
-    Character create(Integer account, String name, Race race, CharacterClass characterClass, Gender gender);
 }
