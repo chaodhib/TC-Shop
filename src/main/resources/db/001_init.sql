@@ -7,7 +7,7 @@ create table account
 
 create table character_
 (
-  id              int          not null auto_increment primary key,
+  id              int          not null primary key,
   name            varchar(255) not null,
   character_class tinyint      not null,
   account_id      int          not null,

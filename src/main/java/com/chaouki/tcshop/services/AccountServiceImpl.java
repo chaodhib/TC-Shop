@@ -5,6 +5,8 @@ import com.chaouki.tcshop.entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -18,5 +20,10 @@ public class AccountServiceImpl implements AccountService {
         account.setUsername(username);
         account.setHashedPassword(hashedPassword);
         return accountDao.save(account);
+    }
+
+    @Override
+    public Optional<Account> findById(Integer id) {
+        return accountDao.findById(id);
     }
 }

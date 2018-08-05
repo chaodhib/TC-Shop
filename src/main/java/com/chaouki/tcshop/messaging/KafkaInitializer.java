@@ -17,8 +17,12 @@ public class KafkaInitializer {
     @Autowired
     private AccountConsumer accountConsumer;
 
+    @Autowired
+    private CharacterConsumer characterConsumer;
+
     @PostConstruct
     public void init(){
         taskExecutor.submit(accountConsumer);
+        taskExecutor.submit(characterConsumer);
     }
 }
