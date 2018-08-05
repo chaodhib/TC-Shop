@@ -17,7 +17,7 @@ public class CharacterEquipment {
     private Integer slotId;
 
     @ManyToOne
-    @JoinColumn(name = "item_template")
+    @JoinColumn(name = "item_template_id")
     private ItemTemplate itemTemplate;
 
     public Integer getId() {

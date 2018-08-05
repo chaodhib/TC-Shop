@@ -14,9 +14,6 @@ public class Account {
     @Column(name = "hashed_password")
     private String hashedPassword;
 
-    @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
-
     public Integer getId() {
         return id;
     }
@@ -39,13 +36,5 @@ public class Account {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
-    }
-
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
     }
 }

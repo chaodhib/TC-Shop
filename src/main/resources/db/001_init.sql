@@ -11,6 +11,7 @@ create table character_
   name            varchar(255) not null,
   character_class tinyint      not null,
   account_id      int          not null,
+  equipment_update_timestamp datetime null,
 
   FOREIGN KEY FK_character_account (account_id) REFERENCES account (id)
 );
@@ -38,11 +39,11 @@ create index items_index
 create table character_equipment
 (
   id                 int auto_increment primary key,
-  slot_id            int                not null,
   character_id       int                not null,
+  slot_id            int                not null,
   item_template_id   mediumint unsigned not null,
-  snapshot_timestamp datetime           not null,
 
+  UNIQUE INDEX (character_id, slot_id),
   FOREIGN KEY FK_Equipment_ItemTemplate (item_template_id) REFERENCES item_template (entry),
   FOREIGN KEY FK_Equipment_Character (character_id) REFERENCES character_ (id)
 );

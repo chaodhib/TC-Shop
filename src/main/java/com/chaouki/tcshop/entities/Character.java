@@ -1,9 +1,9 @@
 package com.chaouki.tcshop.entities;
 
 import com.chaouki.tcshop.entities.converters.CharacterConverter;
-import com.chaouki.tcshop.entities.converters.RaceConverter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "character_")
@@ -11,7 +11,7 @@ public class Character {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer guid;
+    private Integer id;
 
     @ManyToOne
     private Account account;
@@ -22,12 +22,15 @@ public class Character {
     @Column(name = "character_class", columnDefinition = "TINYINT")
     private CharacterClass characterClass;
 
-    public Integer getGuid() {
-        return guid;
+    @Column(name = "equipment_update_timestamp")
+    private LocalDateTime equipmentUpdateTimestamp;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setGuid(Integer guid) {
-        this.guid = guid;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
