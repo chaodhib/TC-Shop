@@ -6,7 +6,7 @@ import com.chaouki.tcshop.entities.converters.RaceConverter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "characters")
+@Table(name = "character_")
 public class Character {
 
     @Id
@@ -19,7 +19,7 @@ public class Character {
     private String name;
 
     @Convert(converter = CharacterConverter.class)
-    @Column(name = "characterClass", columnDefinition = "TINYINT")
+    @Column(name = "character_class", columnDefinition = "TINYINT")
     private CharacterClass characterClass;
 
     public Integer getGuid() {

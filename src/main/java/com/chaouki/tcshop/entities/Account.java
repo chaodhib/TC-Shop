@@ -1,9 +1,6 @@
 package com.chaouki.tcshop.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +10,11 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username;
+
+    @Column(name = "hashed_password")
     private String hashedPassword;
+
+    @Column(name = "creation_date_time")
     private LocalDateTime creationDateTime;
 
     public Integer getId() {
