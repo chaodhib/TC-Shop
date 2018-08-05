@@ -135,9 +135,9 @@ public enum ItemSubClass {
         return label;
     }
 
-    public static ItemSubClass getByIndex(int index){
+    public static ItemSubClass getByIndexes(int classIdx, int subclassIdx){
         for (ItemSubClass value : ItemSubClass.values()) {
-            if(value.getIdx() == index)
+            if(value.getClassIdx() == classIdx && value.getSubclassIdx() == subclassIdx)
                 return value;
         }
         return null;
