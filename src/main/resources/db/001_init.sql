@@ -1,6 +1,6 @@
 create table account
 (
-  id              int          not null auto_increment primary key,
+  id              int          not null primary key,
   hashed_password varchar(255) not null,
   username        varchar(255) not null
 );

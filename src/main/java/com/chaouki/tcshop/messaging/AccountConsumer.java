@@ -1,23 +1,33 @@
 package com.chaouki.tcshop.messaging;
 
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import com.chaouki.tcshop.services.AccountService;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Collections;
 import java.util.Properties;
 
 @Component
 public class AccountConsumer implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountConsumer.class);
+
     private final static String TOPIC = "ACCOUNT";
     private final static String BOOTSTRAP_SERVERS = "localhost:9092";
+    private Consumer<String, String> consumer;
 
-    private Consumer<String, String> createConsumer() {
+    @Autowired
+    private AccountService accountService;
+
+    @PostConstruct
+    public void init() {
 
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
@@ -27,40 +37,52 @@ public class AccountConsumer implements Runnable {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         // Create the consumer using props.
-        final Consumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer = new KafkaConsumer<>(props);
 
         // Subscribe to the topic.
         consumer.subscribe(Collections.singletonList(TOPIC));
-
-        return consumer;
     }
 
     @Override
     public void run() {
-        final Consumer<String, String> consumer = createConsumer();
-
-        final int giveUp = 100;
-        int noRecordsCount = 0;
 
         while (true) {
-
             final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
+            for (ConsumerRecord<String, String> record : consumerRecords) {
+                try {
+                    LOGGER.info("Consumer Record:({}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset());
 
-//            if (consumerRecords.count() == 0) {
-//                noRecordsCount++;
-//                if (noRecordsCount > giveUp) break;
-//                else
-//                    continue;
-//            }
+                    AccountDTO accountDTO = parseMessage(record.value());
+                    accountService.createAccount(accountDTO.id, accountDTO.username, accountDTO.hashedPassword);
 
-            consumerRecords.forEach(record -> {
-                System.out.printf("Consumer Record:(%s, %s, %d, %d)\n", record.key(), record.value(), record.partition(), record.offset());
-            });
-
+                } catch (RuntimeException e) {
+                    LOGGER.error("exception raised on account message processing", e);
+                }
+            }
             consumer.commitAsync();
         }
+    }
 
-//        consumer.close();
-//        System.out.println("DONE");
+    private AccountDTO parseMessage(String value) {
+        String[] tokens = value.split("#");
+        if (tokens.length != 3)
+            throw new IllegalArgumentException(value + " payload is invalid for topic " + TOPIC);
+
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.id = Integer.valueOf(tokens[0]);
+        accountDTO.username = tokens[1];
+        accountDTO.hashedPassword = tokens[2];
+        return accountDTO;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        consumer.close();
+    }
+
+    private class AccountDTO {
+        Integer id;
+        String username;
+        String hashedPassword;
     }
 }
