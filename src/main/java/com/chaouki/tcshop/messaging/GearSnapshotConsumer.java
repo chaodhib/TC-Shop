@@ -61,7 +61,7 @@ public class GearSnapshotConsumer implements Runnable {
                     characterEquipmentService.updateEquipment(gearSnapshotDTO.characterId, gearSnapshotDTO.timestamp, gearSnapshotDTO.itemMap);
 
                 } catch (RuntimeException e) {
-                    LOGGER.error("exception raised on account message processing", e);
+                    LOGGER.error("exception raised on gear snapshot message processing", e);
                 }
             }
             consumer.commitAsync();
