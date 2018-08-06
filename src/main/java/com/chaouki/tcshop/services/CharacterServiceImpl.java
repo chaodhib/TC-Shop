@@ -7,6 +7,9 @@ import com.chaouki.tcshop.entities.CharacterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Service
 public class CharacterServiceImpl implements CharacterService {
 
@@ -26,5 +29,15 @@ public class CharacterServiceImpl implements CharacterService {
         character.setName(characterName);
         character.setCharacterClass(characterClass);
         return characterDao.save(character);
+    }
+
+    @Override
+    public Optional<Character> findById(Integer id) {
+        return characterDao.findById(id);
+    }
+
+    @Override
+    public void onEquipmentUpdate(Character character, LocalDateTime timestamp) {
+        characterDao.setEquipmentUpdateTimestamp(character, timestamp);
     }
 }
