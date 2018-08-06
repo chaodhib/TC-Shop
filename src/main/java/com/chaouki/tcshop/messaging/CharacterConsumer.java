@@ -1,10 +1,8 @@
 package com.chaouki.tcshop.messaging;
 
-import com.chaouki.tcshop.entities.CharacterClass;
-import com.chaouki.tcshop.services.AccountService;
+import com.chaouki.tcshop.entities.enums.CharacterClass;
 import com.chaouki.tcshop.services.CharacterService;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Properties;
 

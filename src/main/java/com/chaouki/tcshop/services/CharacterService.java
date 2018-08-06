@@ -1,7 +1,7 @@
 package com.chaouki.tcshop.services;
 
 import com.chaouki.tcshop.entities.Character;
-import com.chaouki.tcshop.entities.CharacterClass;
+import com.chaouki.tcshop.entities.enums.CharacterClass;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

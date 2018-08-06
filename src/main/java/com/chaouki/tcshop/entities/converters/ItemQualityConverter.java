@@ -1,6 +1,6 @@
 package com.chaouki.tcshop.entities.converters;
 
-import com.chaouki.tcshop.entities.ItemQuality;
+import com.chaouki.tcshop.entities.enums.ItemQuality;
 
 import javax.persistence.AttributeConverter;
 

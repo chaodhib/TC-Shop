@@ -1,4 +1,4 @@
-package com.chaouki.tcshop.entities;
+package com.chaouki.tcshop.entities.enums;
 
 public enum ItemSubClass {
 

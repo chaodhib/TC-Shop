@@ -1,6 +1,10 @@
 package com.chaouki.tcshop.entities;
 
 import com.chaouki.tcshop.entities.converters.*;
+import com.chaouki.tcshop.entities.enums.InventoryType;
+import com.chaouki.tcshop.entities.enums.ItemClass;
+import com.chaouki.tcshop.entities.enums.ItemQuality;
+import com.chaouki.tcshop.entities.enums.ItemSubClass;
 
 import javax.persistence.*;
 

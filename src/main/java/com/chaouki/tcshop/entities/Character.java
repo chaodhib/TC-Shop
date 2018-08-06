@@ -1,6 +1,7 @@
 package com.chaouki.tcshop.entities;
 
 import com.chaouki.tcshop.entities.converters.CharacterConverter;
+import com.chaouki.tcshop.entities.enums.CharacterClass;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

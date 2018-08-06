@@ -3,7 +3,7 @@ package com.chaouki.tcshop.services;
 import com.chaouki.tcshop.dao.CharacterDao;
 import com.chaouki.tcshop.entities.Account;
 import com.chaouki.tcshop.entities.Character;
-import com.chaouki.tcshop.entities.CharacterClass;
+import com.chaouki.tcshop.entities.enums.CharacterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
