@@ -7,11 +7,11 @@ create table account
 
 create table character_
 (
-  id              int          not null primary key,
-  name            varchar(255) not null,
-  character_class tinyint      not null,
-  account_id      int          not null,
-  equipment_update_timestamp datetime null,
+  id                         int          not null primary key,
+  name                       varchar(255) not null,
+  character_class            tinyint      not null,
+  account_id                 int          not null,
+  equipment_update_timestamp datetime     null,
 
   FOREIGN KEY FK_character_account (account_id) REFERENCES account (id)
 );
@@ -38,11 +38,33 @@ create index items_index
 
 create table character_equipment
 (
-  character_id       int                not null,
-  slot_id            int                not null,
-  item_template_id   mediumint unsigned not null,
+  character_id     int                not null,
+  slot_id          int                not null,
+  item_template_id mediumint unsigned not null,
 
-  PRIMARY KEY  (character_id, slot_id),
+  PRIMARY KEY (character_id, slot_id),
   FOREIGN KEY FK_Equipment_ItemTemplate (item_template_id) REFERENCES item_template (entry),
   FOREIGN KEY FK_Equipment_Character (character_id) REFERENCES character_ (id)
+);
+
+create table shop_order
+(
+  id           int auto_increment primary key not null,
+  dateTime     datetime                       not null,
+  status       int                            not null,
+  character_id int                            not null,
+
+  FOREIGN KEY FK_Order_Character (character_id) REFERENCES character_ (id)
+);
+
+create table shop_order_line
+(
+  id         int auto_increment primary key not null,
+  quantity   int                            not null,
+  unitPrice  decimal(19, 2)                 not null,
+  item_entry mediumint unsigned             not null,
+  order_id   int                            not null,
+
+  FOREIGN KEY FK_OrderLine_Order (order_id) REFERENCES shop_order (id),
+  FOREIGN KEY FK_OrderLine_Item (item_entry) REFERENCES item_template (entry)
 );
