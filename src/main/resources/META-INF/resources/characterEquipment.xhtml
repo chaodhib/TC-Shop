@@ -13,8 +13,10 @@
     <h:form >
 
         <p:panel header="Character Equipment">
-            <!--<h:outputLabel for="lastUpdated" value="Last updated:" />-->
-            <!--<h:outputText id="lastUpdated" value="#{bookingController.representation.show.title}" />-->
+            <h:outputLabel for="lastUpdated" value="Last updated: " />
+            <h:outputText id="lastUpdated" value="#{characterEquipmentController.lastUpdate}">
+                <f:attribute name="pattern" value="dd-MM-yyyy HH:mm:ss" />
+            </h:outputText>
 
             <p:dataTable var="var" value="#{characterEquipmentController.characterEquipmentList}" id="dataTable">
                 <p:column headerText="Slot" width="40">
@@ -30,8 +32,11 @@
 
     </h:form>
 
-    <h:form onsubmit="this.action='#{request.contextPath}/logout';"
+    <h:form onsubmit="this.action='#{request.contextPath}/characterList.xhtml';"
             class="logout-form">
+        <p:commandButton value="Return to the character list" ajax="false" />
+    </h:form>
+    <h:form onsubmit="this.action='#{request.contextPath}/logout';" class="logout-form">
         <p:commandButton value="Logout" ajax="false" />
     </h:form>
 </h:body>

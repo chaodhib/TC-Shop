@@ -15,6 +15,7 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class CharacterEquipmentController {
     private CharacterService characterService;
 
     private List<CharacterEquipment> characterEquipmentList;
+    private LocalDateTime lastUpdate;
 
     @PostConstruct
     public void init(){
@@ -43,7 +45,7 @@ public class CharacterEquipmentController {
 
             // the character exists and is owned by the currently logged user
             if(character.isPresent() && character.get().getAccount().getUsername().equals(username)) {
-
+                lastUpdate = character.get().getEquipmentUpdateTimestamp();
                 characterEquipmentList = characterEquipmentService.findByCharacter(character.get());
             } else {
 
@@ -53,5 +55,9 @@ public class CharacterEquipmentController {
 
     public List<CharacterEquipment> getCharacterEquipmentList() {
         return characterEquipmentList;
+    }
+
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
     }
 }

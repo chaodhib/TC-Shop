@@ -56,4 +56,12 @@ public class Character {
     public void setCharacterClass(CharacterClass characterClass) {
         this.characterClass = characterClass;
     }
+
+    public LocalDateTime getEquipmentUpdateTimestamp() {
+        return equipmentUpdateTimestamp;
+    }
+
+    public void setEquipmentUpdateTimestamp(LocalDateTime equipmentUpdateTimestamp) {
+        this.equipmentUpdateTimestamp = equipmentUpdateTimestamp;
+    }
 }
