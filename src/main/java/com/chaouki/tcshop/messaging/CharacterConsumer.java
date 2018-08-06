@@ -55,7 +55,7 @@ public class CharacterConsumer implements Runnable {
             final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
             for (ConsumerRecord<String, String> record : consumerRecords) {
                 try {
-                    LOGGER.info("Consumer Record:({}, {}, {}, {}, {)", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
+                    LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     CharacterDTO characterDTO = parseMessage(record.value());
                     characterService.createCharacter(characterDTO.accountId, characterDTO.id, characterDTO.name, characterDTO.characterClass);

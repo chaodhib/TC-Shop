@@ -50,7 +50,7 @@ public class AccountConsumer implements Runnable {
             final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
             for (ConsumerRecord<String, String> record : consumerRecords) {
                 try {
-                    LOGGER.info("Consumer Record:({}, {}, {}, {}, {)", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
+                    LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     AccountDTO accountDTO = parseMessage(record.value());
                     accountService.createAccount(accountDTO.id, accountDTO.username, accountDTO.hashedPassword);
