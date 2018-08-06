@@ -14,11 +14,11 @@
 
         <p:panel header="Character Equipment">
             <h:outputLabel for="lastUpdated" value="Last updated: " />
-            <h:outputText id="lastUpdated" value="#{characterEquipmentController.lastUpdate}">
+            <h:outputText id="lastUpdated" value="#{characterEquipmentController.lastUpdate != null ? characterEquipmentController.lastUpdate : 'Never'}">
                 <f:attribute name="pattern" value="dd-MM-yyyy HH:mm:ss" />
             </h:outputText>
 
-            <p:dataTable var="var" value="#{characterEquipmentController.characterEquipmentList}" id="dataTable">
+            <p:dataTable var="var" value="#{characterEquipmentController.characterEquipmentList}" id="dataTable" rendered="#{characterEquipmentController.lastUpdate != null}">
                 <p:column headerText="Slot" width="40">
                     <h:outputText value="#{var.slot.equipmentSlot.label}" />
                 </p:column>
