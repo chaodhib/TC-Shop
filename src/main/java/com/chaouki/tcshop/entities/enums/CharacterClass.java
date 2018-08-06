@@ -5,25 +5,31 @@ package com.chaouki.tcshop.entities.enums;
  */
 public enum CharacterClass {
 
-    CLASS_WARRIOR       (1),
-    CLASS_PALADIN       (2),
-    CLASS_HUNTER        (3),
-    CLASS_ROGUE         (4),
-    CLASS_PRIEST        (5),
-    CLASS_DEATH_KNIGHT  (6),
-    CLASS_SHAMAN        (7),
-    CLASS_MAGE          (8),
-    CLASS_WARLOCK       (9),
-    CLASS_DRUID         (11);
+    CLASS_WARRIOR       (1, "Warrior"),
+    CLASS_PALADIN       (2, "Paladin"),
+    CLASS_HUNTER        (3, "Hunter"),
+    CLASS_ROGUE         (4, "Rogue"),
+    CLASS_PRIEST        (5, "Priest"),
+    CLASS_DEATH_KNIGHT  (6, "Death Knight"),
+    CLASS_SHAMAN        (7, "Shaman"),
+    CLASS_MAGE          (8, "Mage"),
+    CLASS_WARLOCK       (9, "Warlock"),
+    CLASS_DRUID         (11, "Druid");
 
     private final int idx;
+    private final String label;
 
-    CharacterClass(int idx) {
+    CharacterClass(int idx, String label) {
         this.idx = idx;
+        this.label = label;
     }
 
     public int getIdx() {
         return idx;
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public static CharacterClass getByIndex(int index){

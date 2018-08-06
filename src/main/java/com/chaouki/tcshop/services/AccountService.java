@@ -9,4 +9,6 @@ public interface AccountService {
     Account createAccount(Integer id, String username, String hashedPassword);
 
     Optional<Account> findById(Integer id);
+
+    Account findByUsername(String username);
 }

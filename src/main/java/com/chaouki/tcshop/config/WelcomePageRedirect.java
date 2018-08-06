@@ -12,7 +12,7 @@ public class WelcomePageRedirect implements WebMvcConfigurer {
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/")
-        .setViewName("forward:/helloworld.xhtml");
+        .setViewName("forward:/characterList.xhtml");
     registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
   }
 }

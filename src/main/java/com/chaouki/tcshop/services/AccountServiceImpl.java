@@ -26,4 +26,9 @@ public class AccountServiceImpl implements AccountService {
     public Optional<Account> findById(Integer id) {
         return accountDao.findById(id);
     }
+
+    @Override
+    public Account findByUsername(String username) {
+        return accountDao.findByUsername(username).orElseThrow(IllegalArgumentException::new);
+    }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Character management</title>
+</h:head>
+
+<h:body>
+    <h:form >
+
+        <p:panel header="Character list">
+
+            <p:dataTable var="ch" value="#{characterController.characterList}" id="dataTable">
+                <p:column headerText="GUID" width="40">
+                    <h:outputText value="#{ch.id}" />
+                </p:column>
+
+                <p:column headerText="Name" width="200">
+                    <h:outputText value="#{ch.name}" />
+                </p:column>
+
+                <p:column headerText="Class" width="200">
+                    <h:outputText value="#{ch.characterClass.label}" />
+                </p:column>
+
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+
+    <h:form onsubmit="this.action='#{request.contextPath}/logout';"
+            class="logout-form">
+        <p:commandButton value="Logout" ajax="false" />
+    </h:form>
+</h:body>
+</html>

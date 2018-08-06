@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public void onEquipmentUpdate(Character character, LocalDateTime timestamp) {
         characterDao.setEquipmentUpdateTimestamp(character, timestamp);
+    }
+
+    @Override
+    public List<Character> findByAccount(Account account) {
+        return characterDao.findByAccount(account);
     }
 }
