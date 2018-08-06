@@ -38,12 +38,11 @@ create index items_index
 
 create table character_equipment
 (
-  id                 int auto_increment primary key,
   character_id       int                not null,
   slot_id            int                not null,
   item_template_id   mediumint unsigned not null,
 
-  UNIQUE INDEX (character_id, slot_id),
+  PRIMARY KEY  (character_id, slot_id),
   FOREIGN KEY FK_Equipment_ItemTemplate (item_template_id) REFERENCES item_template (entry),
   FOREIGN KEY FK_Equipment_Character (character_id) REFERENCES character_ (id)
 );

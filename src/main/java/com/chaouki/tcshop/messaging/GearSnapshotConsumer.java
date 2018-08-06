@@ -1,8 +1,9 @@
 package com.chaouki.tcshop.messaging;
 
+import com.chaouki.tcshop.entities.CharacterEquipment;
 import com.chaouki.tcshop.services.AccountService;
+import com.chaouki.tcshop.services.CharacterEquipmentService;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +12,24 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 @Component
-public class AccountConsumer implements Runnable {
+public class GearSnapshotConsumer implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GearSnapshotConsumer.class);
 
-    private final static String TOPIC = "ACCOUNT";
+    private final static String TOPIC = "GEAR_SNAPSHOT";
     private final static String BOOTSTRAP_SERVERS = "localhost:9092";
     private Consumer<String, String> consumer;
 
     @Autowired
-    private AccountService accountService;
+    private CharacterEquipmentService characterEquipmentService;
 
     @PostConstruct
     public void init() {
@@ -52,8 +57,8 @@ public class AccountConsumer implements Runnable {
                 try {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {)", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
-                    AccountDTO accountDTO = parseMessage(record.value());
-                    accountService.createAccount(accountDTO.id, accountDTO.username, accountDTO.hashedPassword);
+                    GearSnapshotDTO gearSnapshotDTO = parseMessage(record.value());
+                    characterEquipmentService.updateEquipment(gearSnapshotDTO.characterId, gearSnapshotDTO.timestamp, gearSnapshotDTO.itemMap);
 
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on account message processing", e);
@@ -63,16 +68,22 @@ public class AccountConsumer implements Runnable {
         }
     }
 
-    private AccountDTO parseMessage(String value) {
+    private GearSnapshotDTO parseMessage(String value) {
         String[] tokens = value.split("#");
-        if (tokens.length != 3)
+        if (tokens.length < 2)
             throw new IllegalArgumentException(value + " payload is invalid for topic " + TOPIC);
 
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.id = Integer.valueOf(tokens[0]);
-        accountDTO.username = tokens[1];
-        accountDTO.hashedPassword = tokens[2];
-        return accountDTO;
+        GearSnapshotDTO gearSnapshotDTO = new GearSnapshotDTO();
+        gearSnapshotDTO.characterId = Integer.valueOf(tokens[0]);
+        gearSnapshotDTO.timestamp = LocalDateTime.ofEpochSecond(Long.valueOf(tokens[1]) / 1_000_000_000, 0, ZoneOffset.UTC);
+        HashMap<Integer, Integer> itemMap = new HashMap<>();
+        for (int i = 2; i < tokens.length; i++) {
+            String[] split = tokens[i].split(":");
+            itemMap.put(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
+        }
+
+        gearSnapshotDTO.itemMap = itemMap;
+        return gearSnapshotDTO;
     }
 
     @PreDestroy
@@ -80,9 +91,9 @@ public class AccountConsumer implements Runnable {
         consumer.close();
     }
 
-    private class AccountDTO {
-        Integer id;
-        String username;
-        String hashedPassword;
+    private class GearSnapshotDTO {
+        Integer characterId;
+        LocalDateTime timestamp;
+        Map<Integer, Integer> itemMap; // key: slotId. value: itemTemplateId
     }
 }

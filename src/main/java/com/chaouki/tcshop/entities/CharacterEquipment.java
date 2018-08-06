@@ -6,42 +6,19 @@ import javax.persistence.*;
 @Table(name = "character_equipment")
 public class CharacterEquipment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @ManyToOne
-    private Character character;
-
-    @Column(name = "slot_id")
-    private Integer slotId;
+    @EmbeddedId
+    private CharacterEquipmentSlot slot;
 
     @ManyToOne
     @JoinColumn(name = "item_template_id")
     private ItemTemplate itemTemplate;
 
-    public Integer getId() {
-        return id;
+    public CharacterEquipmentSlot getSlot() {
+        return slot;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Character getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(Character character) {
-        this.character = character;
-    }
-
-    public Integer getSlotId() {
-        return slotId;
-    }
-
-    public void setSlotId(Integer slotId) {
-        this.slotId = slotId;
+    public void setSlot(CharacterEquipmentSlot slot) {
+        this.slot = slot;
     }
 
     public ItemTemplate getItemTemplate() {
