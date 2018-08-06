@@ -35,6 +35,10 @@ public enum ItemQuality {
         return label;
     }
 
+    public String getHexRGB(){
+        return "#" + Integer.toHexString(color.getRGB()).substring(2).toUpperCase();
+    }
+
     public static ItemQuality getByIndex(int index){
         for (ItemQuality value : ItemQuality.values()) {
             if(value.getIdx() == index)

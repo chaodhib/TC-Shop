@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
     <title>Character management</title>
@@ -27,6 +27,11 @@
                     <h:outputText value="#{ch.characterClass.label}" />
                 </p:column>
 
+                <p:column headerText="Equipment" width="80">
+                    <p:commandButton id="detailButton" value="See equipment" action="characterEquipment.xhtml">
+                        <f:param name="characterId" value="#{ch.id}" />
+                    </p:commandButton>
+                </p:column>
             </p:dataTable>
 
         </p:panel>
