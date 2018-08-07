@@ -12,6 +12,8 @@
 
 <h:body>
 
+    <p:growl id="growl" showDetail="true" />
+
     <ui:include src="header.xhtml"/>
 
     <h:form >
@@ -68,7 +70,7 @@
                 </p:column>
 
                 <p:column headerText="Add to Cart">
-                    <p:commandButton value="Add" action="#{cartController.addItem(item)}" update="cartLink" style="alignment: center"/>
+                    <p:commandButton value="Add" action="#{cartController.addItem(item)}" update="cartLink growl" style="alignment: center"/>
                 </p:column>
             </p:dataTable>
 

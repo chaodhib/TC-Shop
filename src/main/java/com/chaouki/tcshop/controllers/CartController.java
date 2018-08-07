@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean
 @SessionScoped
@@ -26,6 +28,8 @@ public class CartController {
 
     public void addItem(ItemTemplate itemTemplate) {
         cart.add(itemTemplate, 1, itemCatalogService.getItemPricePerUnit(itemTemplate));
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",  "The selected item has been added to your cart") );
     }
 
     public void removeLine(CartLine cartLine) {
