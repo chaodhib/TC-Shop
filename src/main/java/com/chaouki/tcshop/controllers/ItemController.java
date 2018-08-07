@@ -3,6 +3,7 @@ package com.chaouki.tcshop.controllers;
 import com.chaouki.tcshop.entities.Account;
 import com.chaouki.tcshop.entities.Character;
 import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.enums.InventoryType;
 import com.chaouki.tcshop.entities.enums.ItemClass;
 import com.chaouki.tcshop.services.AccountService;
 import com.chaouki.tcshop.services.CharacterService;
@@ -31,12 +32,15 @@ public class ItemController {
     private LazyDataModel<ItemTemplate> itemTemplates;
     private List<ItemTemplate> filteredItems;
     private List<SelectItem> itemClassOptions;
+    private List<SelectItem> inventoryTypeOptions;
 
     @PostConstruct
     public void init(){
         itemTemplates = new ItemLazyDataModel(itemTemplateService);
         itemClassOptions = Arrays.stream(ItemClass.values()).map(itemClass -> new SelectItem(itemClass.getIdx(),itemClass.getLabel())).collect(Collectors.toList());
         itemClassOptions.add(0, new SelectItem(""));
+        inventoryTypeOptions = Arrays.stream(InventoryType.values()).map(inventoryType -> new SelectItem(inventoryType.getIdx(),inventoryType.getLabel())).collect(Collectors.toList());
+        inventoryTypeOptions.add(0, new SelectItem(""));
     }
 
     public LazyDataModel<ItemTemplate> getItemTemplates() {
@@ -53,5 +57,9 @@ public class ItemController {
 
     public List<SelectItem> getItemClassOptions() {
         return itemClassOptions;
+    }
+
+    public List<SelectItem> getInventoryTypeOptions() {
+        return inventoryTypeOptions;
     }
 }

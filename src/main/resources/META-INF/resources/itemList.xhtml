@@ -35,7 +35,7 @@
                 </p:column>
 
                 <p:column headerText="Class" width="40"
-                          filterBy="#{item.itemClass.idx }"
+                          filterBy="#{item.itemClass.idx}"
                           filterOptions="#{itemController.itemClassOptions}"
                 >
                     <h:outputText value="#{item.itemClass.label}" />
@@ -49,11 +49,16 @@
                     <h:outputText value="#{item.itemLevel}" />
                 </p:column>
 
-                <p:column headerText="Min Character level" width="40">
+                <p:column headerText="Min Character level" width="40"
+                          filterBy="#{item.requiredLevel}"
+                >
                     <h:outputText value="#{item.requiredLevel != 0 ? item.requiredLevel : ''}" />
                 </p:column>
 
-                <p:column headerText="Slot" width="40">
+                <p:column headerText="Slot" width="40"
+                          filterBy="#{item.inventoryType.idx}"
+                          filterOptions="#{itemController.inventoryTypeOptions}"
+                >
                     <h:outputText value="#{item.inventoryType.label}" />
                 </p:column>
             </p:dataTable>

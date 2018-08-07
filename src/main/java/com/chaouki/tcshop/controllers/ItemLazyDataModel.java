@@ -1,6 +1,7 @@
 package com.chaouki.tcshop.controllers;
 
 import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.enums.InventoryType;
 import com.chaouki.tcshop.entities.enums.ItemClass;
 import com.chaouki.tcshop.services.ItemTemplateService;
 import org.primefaces.model.LazyDataModel;
@@ -46,6 +47,16 @@ public class ItemLazyDataModel extends LazyDataModel<ItemTemplate> {
 
                 if(filters.containsKey("itemClass.idx")) {
                     Predicate predicate = criteriaBuilder.equal(root.get("itemClass"), ItemClass.getByIndex(Integer.valueOf((String) filters.get("itemClass.idx"))));
+                    predicateList.add(predicate);
+                }
+
+                if(filters.containsKey("inventoryType.idx")) {
+                    Predicate predicate = criteriaBuilder.equal(root.get("inventoryType"), InventoryType.getByIndex(Integer.valueOf((String) filters.get("inventoryType.idx"))));
+                    predicateList.add(predicate);
+                }
+
+                if(filters.containsKey("requiredLevel")) {
+                    Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(root.get("requiredLevel"), (String) filters.get("requiredLevel"));
                     predicateList.add(predicate);
                 }
 
