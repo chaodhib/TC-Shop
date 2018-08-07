@@ -26,6 +26,32 @@
                 <p:column headerText="ID" width="40">
                     <h:outputText value="#{item.entry}" />
                 </p:column>
+
+                <p:column headerText="Name" width="40" style="background-color: black">
+                    <a href="https://wotlk.evowow.com/?item=#{item.entry}" style="text-decoration:none;">
+                        <h:outputText value="#{item.name}"  style=" color: #{item.itemQuality.hexRGB}" />
+                    </a>
+                </p:column>
+
+                <p:column headerText="Class" width="40">
+                    <h:outputText value="#{item.itemClass.label}" />
+                </p:column>
+
+                <p:column headerText="Subclass" width="40">
+                    <h:outputText value="#{item.itemSubClass.label}" />
+                </p:column>
+
+                <p:column headerText="Item level" width="40">
+                    <h:outputText value="#{item.itemLevel}" />
+                </p:column>
+
+                <p:column headerText="Min Character level" width="40">
+                    <h:outputText value="#{item.requiredLevel != 0 ? item.requiredLevel : ''}" />
+                </p:column>
+
+                <p:column headerText="Slot" width="40">
+                    <h:outputText value="#{item.inventoryType.label}" />
+                </p:column>
             </p:dataTable>
 
         </p:panel>

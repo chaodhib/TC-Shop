@@ -53,7 +53,7 @@ public class ItemTemplate {
     }
 
     public ItemSubClass getItemSubClass() {
-        return ItemSubClass.getByIndexes(itemClass.getIdx(), itemSubClassIdx);
+        return ItemSubClass.getByIndexes(itemSubClassIdx, itemClass.getIdx());
     }
 
     public String getName() {
