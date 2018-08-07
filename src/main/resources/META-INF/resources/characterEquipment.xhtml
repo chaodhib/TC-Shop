@@ -3,7 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
     <title>Character management</title>
@@ -11,9 +12,7 @@
 
 <h:body>
 
-    <h:form onsubmit="this.action='#{request.contextPath}/logout';" class="logout-form">
-        <p:commandButton value="Logout" ajax="false" />
-    </h:form>
+    <ui:include src="header.xhtml"/>
 
     <h:form >
 
@@ -36,9 +35,9 @@
                     <h:outputText value="#{var.slot.equipmentSlot.label}" />
                 </p:column>
 
-                <p:column headerText="Item" width="40">
+                <p:column headerText="Item" width="40"  style="background-color: black">
                     <a href="https://wotlk.evowow.com/?item=#{var.itemTemplate.entry}">
-                        <h:outputText value="#{var.itemTemplate.name}"  style="background-color: black; color: #{var.itemTemplate.itemQuality.hexRGB}" />
+                        <h:outputText value="#{var.itemTemplate.name}"  style="color: #{var.itemTemplate.itemQuality.hexRGB}" />
                     </a>
                 </p:column>
             </p:dataTable>
@@ -47,6 +46,5 @@
 
     </h:form>
 
-    <p:button href="characterList.xhtml" value="Return to the character list" />
 </h:body>
 </html>

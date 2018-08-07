@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+<h:head>
+    <title>Cart</title>
+</h:head>
+
+<h:body>
+
+    <ui:include src="header.xhtml"/>
+
+    <h:form >
+
+        <p:panel header="Cart">
+
+            <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable">
+                <p:column headerText="Item ID">
+                    <h:outputText value="#{line.item.entry}" />
+                </p:column>
+
+                <p:column headerText="Item name">
+                    <h:outputText value="#{line.item.name}" />
+                </p:column>
+
+                <p:column headerText="Quantity">
+                    <h:outputText value="#{line.quantity}  " />
+                    <p:commandButton value="+" action="#{cartController.incQuantity(line)}" update="cartLink dataTable"/>
+                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable"/>
+                </p:column>
+
+                <p:column headerText="Price per unit">
+                    <h:outputText value="#{line.pricePerUnit}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Subtotal">
+                    <h:outputText value="#{line.subtotal}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Remove line">
+                    <p:commandButton value="Remove" action="#{cartController.removeLine(line)}" update="cartLink dataTable"/>
+                </p:column>
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+</h:body>
+</html>

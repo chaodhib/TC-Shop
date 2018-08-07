@@ -1,0 +1,25 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <div class="ui-g">
+        <div class="ui-g-1">
+            <h3>TrinityCore Shop</h3>
+        </div>
+        <div class="ui-g-9">
+            <p:button href="characterList.xhtml" value="Character List"/>
+            <p:button href="itemList.xhtml" value="Item List"/>
+            <p:button href="cart.xhtml" value="Cart (${cartController.cart.cartLines.size()} items)" id="cartLink"/>
+        </div>
+        <div class="ui-g-1">
+            Welcome ${accountController.username}
+        </div>
+        <div class="ui-g-1">
+            <p:button href="logout" value="Logout"/>
+        </div>
+    </div>
+
+</ui:composition>
