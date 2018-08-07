@@ -10,13 +10,26 @@
 </h:head>
 
 <h:body>
+
+    <h:form onsubmit="this.action='#{request.contextPath}/logout';" class="logout-form">
+        <p:commandButton value="Logout" ajax="false" />
+    </h:form>
+
     <h:form >
 
         <p:panel header="Character Equipment">
-            <h:outputLabel for="lastUpdated" value="Last updated: " />
-            <h:outputText id="lastUpdated" value="#{characterEquipmentController.lastUpdate != null ? characterEquipmentController.lastUpdate : 'Never'}">
-                <f:attribute name="pattern" value="dd-MM-yyyy HH:mm:ss" />
-            </h:outputText>
+            <p:panelGrid columns="2">
+                <h:outputLabel for="name" value="Character: " />
+                <h:outputText id="name" value="#{characterEquipmentController.character.name}">
+                </h:outputText>
+
+                <h:outputLabel for="lastUpdate" value="Last update: " />
+                <h:outputText id="lastUpdate" value="#{characterEquipmentController.lastUpdate != null ? characterEquipmentController.lastUpdate : 'Never'}">
+                    <f:attribute name="pattern" value="dd-MM-yyyy HH:mm:ss" />
+                </h:outputText>
+            </p:panelGrid>
+
+
 
             <p:dataTable var="var" value="#{characterEquipmentController.characterEquipmentList}" id="dataTable" rendered="#{characterEquipmentController.lastUpdate != null}">
                 <p:column headerText="Slot" width="40">
@@ -24,7 +37,9 @@
                 </p:column>
 
                 <p:column headerText="Item" width="40">
-                    <h:outputText value="#{var.itemTemplate.name}"  style="background-color: black; color: #{var.itemTemplate.itemQuality.hexRGB}" />
+                    <a href="https://wotlk.evowow.com/?item=#{var.itemTemplate.entry}">
+                        <h:outputText value="#{var.itemTemplate.name}"  style="background-color: black; color: #{var.itemTemplate.itemQuality.hexRGB}" />
+                    </a>
                 </p:column>
             </p:dataTable>
 
@@ -32,12 +47,6 @@
 
     </h:form>
 
-    <h:form onsubmit="this.action='#{request.contextPath}/characterList.xhtml';"
-            class="logout-form">
-        <p:commandButton value="Return to the character list" ajax="false" />
-    </h:form>
-    <h:form onsubmit="this.action='#{request.contextPath}/logout';" class="logout-form">
-        <p:commandButton value="Logout" ajax="false" />
-    </h:form>
+    <h:link value="Return to the character list" outcome="characterList.xhtml" />
 </h:body>
 </html>
