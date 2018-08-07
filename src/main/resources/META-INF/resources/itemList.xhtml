@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Item catalogue</title>
+</h:head>
+
+<h:body>
+    <h:form onsubmit="this.action='#{request.contextPath}/logout';"
+            class="logout-form">
+        <p:commandButton value="Logout" ajax="false" />
+    </h:form>
+
+    <h:form >
+        <p:panel header="Item catalogue">
+
+            <p:dataTable var="item" value="#{itemController.itemTemplates}" id="dataTable"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                         rowsPerPageTemplate="5,10,20" lazy="true"
+            >
+                <p:column headerText="ID" width="40">
+                    <h:outputText value="#{item.entry}" />
+                </p:column>
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+</h:body>
+</html>
