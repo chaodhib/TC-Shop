@@ -30,8 +30,8 @@
 
                 <p:column headerText="Quantity">
                     <h:outputText value="#{line.quantity}  " />
-                    <p:commandButton value="+" action="#{cartController.incQuantity(line)}" update="cartLink dataTable"/>
-                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable"/>
+                    <p:commandButton value="+" action="#{cartController.incQuantity(line)}" update="cartLink dataTable total"/>
+                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable total"/>
                 </p:column>
 
                 <p:column headerText="Price per unit">
@@ -47,12 +47,21 @@
                 </p:column>
 
                 <p:column headerText="Remove line">
-                    <p:commandButton value="Remove" action="#{cartController.removeLine(line)}" update="cartLink dataTable"/>
+                    <p:commandButton value="Remove" action="#{cartController.removeLine(line)}" update="cartLink dataTable checkOutBt total"/>
                 </p:column>
             </p:dataTable>
 
         </p:panel>
 
     </h:form>
+
+    <p:panelGrid columns="2">
+        <h:outputLabel for="total" value="Total price: " />
+        <h:outputText id="total" value="#{cartController.cart.totalPrice}" >
+            <f:convertNumber type="currency" currencySymbol="€" />
+        </h:outputText>
+    </p:panelGrid>
+    <p:button href="checkout.xhtml" value="Check out" disabled="#{cartController.cart.cartLines.isEmpty()}" id="checkOutBt"/>
+
 </h:body>
 </html>

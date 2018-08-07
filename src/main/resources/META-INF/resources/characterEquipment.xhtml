@@ -19,8 +19,7 @@
         <p:panel header="Character Equipment">
             <p:panelGrid columns="2">
                 <h:outputLabel for="name" value="Character: " />
-                <h:outputText id="name" value="#{characterEquipmentController.character.name}">
-                </h:outputText>
+                <h:outputText id="name" value="#{characterEquipmentController.character.name}" />
 
                 <h:outputLabel for="lastUpdate" value="Last update: " />
                 <h:outputText id="lastUpdate" value="#{characterEquipmentController.lastUpdate != null ? characterEquipmentController.lastUpdate : 'Never'}">

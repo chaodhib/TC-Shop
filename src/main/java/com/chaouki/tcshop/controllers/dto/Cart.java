@@ -49,4 +49,13 @@ public class Cart {
             cartLine.setQuantity(cartLine.getQuantity() - 1);
         }
     }
+
+    public BigDecimal getTotalPrice() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (CartLine cartLine : cartLines) {
+            total = total.add(cartLine.getSubtotal());
+        }
+
+        return total;
+    }
 }
