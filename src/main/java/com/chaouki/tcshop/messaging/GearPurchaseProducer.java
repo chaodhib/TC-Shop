@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class GearPurchaseProducer {
@@ -28,7 +27,9 @@ public class GearPurchaseProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterConsumer.class);
 
     private final static String TOPIC = "GEAR_PURCHASE";
-    private final static String BOOTSTRAP_SERVERS = "localhost:9092";
+
+    @Value("${kafka.bootstrap-servers}")
+    private String BOOTSTRAP_SERVERS;
 
     private Producer<String, String> producer;
 

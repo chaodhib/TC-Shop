@@ -8,6 +8,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +26,10 @@ public class GearSnapshotConsumer implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(GearSnapshotConsumer.class);
 
     private final static String TOPIC = "GEAR_SNAPSHOT";
-    private final static String BOOTSTRAP_SERVERS = "localhost:9092";
+
+    @Value("${kafka.bootstrap-servers}")
+    private String BOOTSTRAP_SERVERS;
+
     private Consumer<String, String> consumer;
 
     @Autowired

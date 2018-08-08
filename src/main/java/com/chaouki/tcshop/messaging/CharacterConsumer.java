@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +22,9 @@ public class CharacterConsumer implements Runnable {
 
     private final static String TOPIC = "CHARACTER";
     private static final int PAYLOAD_TOKEN_NUMBER = 4;
-    private final static String BOOTSTRAP_SERVERS = "localhost:9092";
+
+    @Value("${kafka.bootstrap-servers}")
+    private String BOOTSTRAP_SERVERS;
 
     private Consumer<String, String> consumer;
 
