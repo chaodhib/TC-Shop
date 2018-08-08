@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Check out</title>
+</h:head>
+
+<h:body>
+    <ui:include src="header.xhtml"/>
+
+        <p:growl id="growl" showDetail="true" keepAlive="true"/>
+
+        <p:panel header="Check out">
+
+            <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable">
+                <p:column headerText="Item ID">
+                    <h:outputText value="#{line.item.entry}" />
+                </p:column>
+
+                <p:column headerText="Item name">
+                    <h:outputText value="#{line.item.name}" />
+                </p:column>
+
+                <p:column headerText="Quantity">
+                    <h:outputText value="#{line.quantity}  " />
+                </p:column>
+
+                <p:column headerText="Price per unit">
+                    <h:outputText value="#{line.pricePerUnit}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Subtotal">
+                    <h:outputText value="#{line.subtotal}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+
+            <h:form >
+            <p:panelGrid columns="2">
+                <h:outputLabel for="total" value="Total price: " />
+                <h:outputText id="total" value="#{cartController.cart.totalPrice}" >
+                    <f:convertNumber type="currency" currencySymbol="€" />
+                </h:outputText>
+
+                <p:outputLabel for="character" value="Character: " />
+                <p:selectOneMenu id="character" value="#{orderController.characterId}" style="width:125px" required="true">
+                    <f:selectItem itemLabel="Select One" itemValue="" />
+                    <f:selectItems value="#{characterController.characterList}" var="chara"
+                                   itemLabel="#{chara.name}" itemValue="#{chara.id}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="paymentDetails" value="Credit Card n°: "/>
+                <p:inputText id="paymentDetails" value="#{orderController.paymentDetails}" required="true" />
+
+                <p:commandButton value="Start order" action="#{orderController.startOrder()}" update="growl dataTable cartLink character paymentDetails" disabled="#{cartController.cart.cartLines.isEmpty()}"/>
+            </p:panelGrid>
+
+             </h:form>
+        </p:panel>
+
+</h:body>
+</html>

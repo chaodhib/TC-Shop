@@ -59,6 +59,7 @@ public class CharacterEquipmentController {
             } else {
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpStatus.NOT_FOUND.value(), "Either the resource does not exist or you are unauthorized to access it");
+                    return;
                 } catch (IOException e) {
                     LOGGER.error("exception thrown when redirecting user to error message", e);
                 }

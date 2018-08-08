@@ -12,10 +12,10 @@
         <div class="ui-g-9">
             <p:button href="characterList.xhtml" value="Character List"/>
             <p:button href="itemList.xhtml" value="Item List"/>
-            <p:button href="cart.xhtml" value="Cart (${cartController.cart.cartLines.size()} items)" id="cartLink"/>
+            <p:button href="cart.xhtml" value="Cart (#{cartController.cart.cartLines.size()} items)" id="cartLink"/>
         </div>
         <div class="ui-g-1">
-            Welcome ${accountController.username}
+            Welcome #{accountController.username}
         </div>
         <div class="ui-g-1">
             <p:button href="logout" value="Logout"/>
