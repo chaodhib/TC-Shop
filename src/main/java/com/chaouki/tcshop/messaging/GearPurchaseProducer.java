@@ -24,7 +24,7 @@ import java.util.Properties;
 @Component
 public class GearPurchaseProducer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CharacterConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GearPurchaseProducer.class);
 
     private final static String TOPIC = "GEAR_PURCHASE";
 
@@ -56,9 +56,8 @@ public class GearPurchaseProducer {
 
     public void sendGearPurchaseMessage(Order order) {
         final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, constructMessage(order));
-        producer.send(record, (metadata, exception) -> {
-            orderService.flagOrderAsSentToMessageBroker(order);
-        });
+        LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), null, TOPIC);
+        producer.send(record, (metadata, exception) -> orderService.flagOrderAsSentToMessageBroker(order));
     }
 
     private String constructMessage(Order order) {

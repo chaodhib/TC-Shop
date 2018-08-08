@@ -9,4 +9,6 @@ public interface OrderService {
     void flagOrderAsSentToMessageBroker(Order order);
 
     void flagOrderAsSentToGameServer(Order order);
+
+    Order findById(Integer id);
 }

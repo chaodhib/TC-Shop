@@ -11,6 +11,7 @@ import com.chaouki.tcshop.messaging.GearPurchaseProducer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -27,15 +28,14 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-    private final OrderDao orderDao;
-    private final CharacterService characterService;
-    private final GearPurchaseProducer gearPurchaseProducer;
+    @Autowired
+    private OrderDao orderDao;
 
-    public OrderServiceImpl(OrderDao orderDao, CharacterService characterService, GearPurchaseProducer gearPurchaseProducer) {
-        this.orderDao = orderDao;
-        this.characterService = characterService;
-        this.gearPurchaseProducer = gearPurchaseProducer;
-    }
+    @Autowired
+    private CharacterService characterService;
+
+    @Autowired
+    private GearPurchaseProducer gearPurchaseProducer;
 
     @Override
     public OrderCreationStatus createOrder(Integer characterId, String paymentDetails, Cart cart) {
@@ -72,15 +72,26 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         for (CartLine cartLine : cart.getCartLines()) {
             Integer countPerStackMax = cartLine.getItem().getCountPerStackMax();
-            if (cartLine.getQuantity() <= countPerStackMax) {
+
+            int nbOfStacks = cartLine.getQuantity()/countPerStackMax;
+            // create nbOfStacks stacks, with each stack on maximum amount.
+            for (int i = 0; i < nbOfStacks; i++) {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setItem(cartLine.getItem());
                 orderLine.setQuantity(cartLine.getQuantity());
                 orderLine.setUnitPrice(cartLine.getPricePerUnit());
                 orderLine.setOrder(order);
                 orderLines.add(orderLine);
-            } else {
-                throw new NotImplementedException("TODO!");
+            }
+
+            // create up to 1 stack of non maximum amount
+            if(cartLine.getQuantity() % countPerStackMax != 0) {
+                OrderLine orderLine = new OrderLine();
+                orderLine.setItem(cartLine.getItem());
+                orderLine.setQuantity(cartLine.getQuantity() % countPerStackMax);
+                orderLine.setUnitPrice(cartLine.getPricePerUnit());
+                orderLine.setOrder(order);
+                orderLines.add(orderLine);
             }
         }
         return orderLines;
@@ -106,5 +117,10 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.DELIVERED);
         orderDao.save(order);
+    }
+
+    @Override
+    public Order findById(Integer id) {
+        return orderDao.findById(id).orElseThrow(() -> new IllegalStateException("orderId " + id));
     }
 }
