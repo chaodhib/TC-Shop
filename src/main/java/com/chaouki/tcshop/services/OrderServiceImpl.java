@@ -7,13 +7,15 @@ import com.chaouki.tcshop.entities.Character;
 import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.OrderLine;
 import com.chaouki.tcshop.entities.enums.OrderStatus;
+import com.chaouki.tcshop.messaging.GearPurchaseProducer;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -27,15 +29,18 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderDao orderDao;
     private final CharacterService characterService;
+    private final GearPurchaseProducer gearPurchaseProducer;
 
-    public OrderServiceImpl(OrderDao orderDao, CharacterService characterService) {
+    public OrderServiceImpl(OrderDao orderDao, CharacterService characterService, GearPurchaseProducer gearPurchaseProducer) {
         this.orderDao = orderDao;
         this.characterService = characterService;
+        this.gearPurchaseProducer = gearPurchaseProducer;
     }
 
     @Override
     public OrderCreationStatus createOrder(Integer characterId, String paymentDetails, Cart cart) {
         Character character = characterService.findById(characterId).orElseThrow(IllegalArgumentException::new);
+        Assert.notEmpty(cart.getCartLines(), "the cart shouldn't be empty");
 
         PaymentCheckStatus paymentCheckStatus = checkPaymentDetails(paymentDetails, cart.getTotalPrice());
         if (!paymentCheckStatus.equals(PaymentCheckStatus.SUCCESS)) {
@@ -74,12 +79,32 @@ public class OrderServiceImpl implements OrderService {
                 orderLine.setUnitPrice(cartLine.getPricePerUnit());
                 orderLine.setOrder(order);
                 orderLines.add(orderLine);
+            } else {
+                throw new NotImplementedException("TODO!");
             }
         }
         return orderLines;
     }
 
     private void deliverItems(Order order) {
+        gearPurchaseProducer.sendGearPurchaseMessage(order);
+    }
 
+    @Override
+    public void flagOrderAsSentToMessageBroker(Order order) {
+        if(!order.getStatus().equals(OrderStatus.SENDING))
+            throw new IllegalStateException("orderId " +order.getId());
+
+        order.setStatus(OrderStatus.WAITING_FOR_CONFIRMATION);
+        orderDao.save(order);
+    }
+
+    @Override
+    public void flagOrderAsSentToGameServer(Order order) {
+        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
+            throw new IllegalStateException("orderId " +order.getId());
+
+        order.setStatus(OrderStatus.DELIVERED);
+        orderDao.save(order);
     }
 }
