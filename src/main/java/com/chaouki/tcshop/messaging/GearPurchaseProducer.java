@@ -44,6 +44,8 @@ public class GearPurchaseProducer {
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "tc-shop");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 1000);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
 
         // Create the consumer using props.
         producer = new KafkaProducer<>(props);
@@ -57,7 +59,12 @@ public class GearPurchaseProducer {
     public void sendGearPurchaseMessage(Order order) {
         final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, constructMessage(order));
         LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), null, TOPIC);
-        producer.send(record, (metadata, exception) -> orderService.flagOrderAsSentToMessageBroker(order));
+        producer.send(record, (metadata, exception) -> {
+            if(exception == null)
+                orderService.flagOrderAsSentToMessageBroker(order);
+            else
+                LOGGER.warn("Could not send Gear Purchase message to the broker", exception);
+        });
     }
 
     private String constructMessage(Order order) {
