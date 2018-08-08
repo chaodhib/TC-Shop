@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Order List</title>
+</h:head>
+
+<h:body>
+    <ui:include src="header.xhtml"/>
+
+    <h:form >
+
+        <p:panel header="Order List">
+
+            <p:dataTable var="ord" value="#{orderHistoryController.orders}" id="dataTable"  scrollable="true" scrollHeight="400">
+
+                <p:column headerText="Order ID">
+                    <h:outputText value="#{ord.id}" />
+                </p:column>
+
+                <p:column headerText="Character target">
+                    <h:outputText value="#{ord.character.name}" />
+                </p:column>
+
+                <p:column headerText="Datetime">
+                    <h:outputText value="#{ord.dateTime}">
+                        <f:attribute name="pattern" value="dd-MM-yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Status">
+                    <h:outputText value="#{ord.status.label}" />
+                </p:column>
+
+                <p:column headerText="Total price">
+                    <h:outputText value="#{ord.totalPrice}">
+                        <f:convertNumber type="currency" currencySymbol="€" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

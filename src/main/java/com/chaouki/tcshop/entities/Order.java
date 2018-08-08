@@ -1,9 +1,11 @@
 package com.chaouki.tcshop.entities;
 
+import com.chaouki.tcshop.controllers.dto.CartLine;
 import com.chaouki.tcshop.entities.converters.OrderStatusConverter;
 import com.chaouki.tcshop.entities.enums.OrderStatus;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +27,15 @@ public class Order {
     private Character character;
 
     private LocalDateTime dateTime;
+
+    public BigDecimal getTotalPrice() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (OrderLine orderLine : orderLineList) {
+            total = total.add(orderLine.getSubtotal());
+        }
+
+        return total;
+    }
 
     public Integer getId() {
         return id;

@@ -3,6 +3,7 @@ package com.chaouki.tcshop.services;
 import com.chaouki.tcshop.controllers.dto.Cart;
 import com.chaouki.tcshop.controllers.dto.CartLine;
 import com.chaouki.tcshop.dao.OrderDao;
+import com.chaouki.tcshop.entities.Account;
 import com.chaouki.tcshop.entities.Character;
 import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.OrderLine;
@@ -21,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -122,5 +124,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(Integer id) {
         return orderDao.findById(id).orElseThrow(() -> new IllegalStateException("orderId " + id));
+    }
+
+    @Override
+    public List<Order> findByAccount(Account account) {
+        return orderDao.findByAccount(account);
     }
 }

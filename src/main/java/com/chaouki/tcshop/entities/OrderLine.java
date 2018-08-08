@@ -21,6 +21,11 @@ public class OrderLine {
     @ManyToOne
     private Order order;
 
+    public BigDecimal getSubtotal() {
+        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+
     public Integer getId() {
         return id;
     }
