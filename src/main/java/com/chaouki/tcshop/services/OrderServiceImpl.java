@@ -35,6 +35,7 @@ import java.util.Map;
 public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
+    public static final String STATUS_SUCCESS = "success";
 
     @Autowired
     private OrderDao orderDao;
@@ -56,27 +57,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderCreationStatus createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart) {
+    public CreateOrderResult createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart) {
         Character character = characterService.findById(characterId).orElseThrow(IllegalArgumentException::new);
         Assert.notEmpty(cart.getCartLines(), "the cart shouldn't be empty");
 
         Order order = persistOrder(character, cart);
 
-        PaymentCheckStatus paymentCheckStatus = checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
-        if (!paymentCheckStatus.equals(PaymentCheckStatus.SUCCESS)) {
+        String paymentStatus = checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
+        if (!STATUS_SUCCESS.equals(paymentStatus)) {
             order.setStatus(OrderStatus.PAYMENT_FAILED);
             orderDao.save(order);
-            return OrderCreationStatus.PAYMENT_FAILED;
+            return new CreateOrderResult(OrderCreationStatus.PAYMENT_FAILED, paymentStatus);
         }
 
         order.setStatus(OrderStatus.SENDING);
         orderDao.save(order);
         deliverItems(order);
 
-        return OrderCreationStatus.SUCCESS;
+        return new CreateOrderResult(OrderCreationStatus.SUCCESS);
     }
 
-    private PaymentCheckStatus checkPaymentDetails(Order order, StripePaymentDetails paymentDetails, BigDecimal totalPrice) {
+    private String checkPaymentDetails(Order order, StripePaymentDetails paymentDetails, BigDecimal totalPrice) {
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", totalPrice.multiply(BigDecimal.valueOf(100)).toBigIntegerExact().intValue());
         chargeParams.put("currency", "EUR");
@@ -86,15 +87,15 @@ public class OrderServiceImpl implements OrderService {
         try {
             Charge charge = Charge.create(chargeParams);
             order.setStripeChargeId(charge.getId());
-            return PaymentCheckStatus.SUCCESS;
+            return STATUS_SUCCESS;
         } catch (StripeException e) {
             if(e instanceof CardException){
                 String chargeId = ((CardException) e).getCharge();
                 order.setStripeChargeId(chargeId);
             }
 
-            LOGGER.error("payment failed", e);
-            return PaymentCheckStatus.FAILURE;
+            LOGGER.warn("payment failed", e);
+            return e.getCode();
         }
     }
 

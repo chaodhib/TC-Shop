@@ -2,6 +2,7 @@ package com.chaouki.tcshop.controllers;
 
 import com.chaouki.tcshop.controllers.dto.Cart;
 import com.chaouki.tcshop.entities.Character;
+import com.chaouki.tcshop.services.CreateOrderResult;
 import com.chaouki.tcshop.services.OrderCreationStatus;
 import com.chaouki.tcshop.services.OrderService;
 import com.chaouki.tcshop.services.StripePaymentDetails;
@@ -57,9 +58,10 @@ public class OrderStepTwoController {
                 }
             }
 
-            OrderCreationStatus creationStatus = orderService.createOrder(character.getId(), stripePaymentDetails, cart);
+            CreateOrderResult createOrderResult = orderService.createOrder(character.getId(), stripePaymentDetails, cart);
 
-            switch (creationStatus) {
+            outcome = createOrderResult.getStatus().getLabel();
+            switch (createOrderResult.getStatus()) {
                 case SUCCESS:
                     // clean up
                     cart.getCartLines().clear();
@@ -67,12 +69,11 @@ public class OrderStepTwoController {
                     orderStepOneController.setCharacter(null);
                     break;
                 case PAYMENT_FAILED:
+                    outcome += ". Message from payment system: " + createOrderResult.getErrorMessage() + ".";
                     break;
                 default:
                     throw new IllegalArgumentException();
             }
-
-            outcome = creationStatus.getLabel();
         } else {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpStatus.BAD_REQUEST.value(), "Either the resource does not exist or you are unauthorized to access it");

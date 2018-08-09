@@ -7,7 +7,7 @@ import com.chaouki.tcshop.entities.Order;
 import java.util.List;
 
 public interface OrderService {
-    OrderCreationStatus createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart);
+    CreateOrderResult createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart);
 
     void flagOrderAsSentToMessageBroker(Order order);
 
