@@ -7,11 +7,13 @@ import com.chaouki.tcshop.entities.enums.CharacterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CharacterServiceImpl implements CharacterService {
 
     @Autowired
@@ -19,6 +21,9 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private CharacterEquipmentService characterEquipmentService;
 
     @Override
     public Character createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass) {
@@ -45,5 +50,15 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public List<Character> findByAccount(Account account) {
         return characterDao.findByAccount(account);
+    }
+
+    @Override
+    public void deleteCharacter(Integer accountId, Integer characterId) {
+        Character character = characterDao.findById(characterId).orElseThrow(IllegalArgumentException::new);
+        if(!character.getAccount().getId().equals(accountId))
+            throw new IllegalArgumentException("the character does not belong to the account provided");
+
+        characterEquipmentService.deleteByCharacter(character);
+        characterDao.delete(character);
     }
 }

@@ -12,4 +12,6 @@ public interface CharacterEquipmentService {
     void updateEquipment(Integer characterId, LocalDateTime timestamp, Map<Integer, Integer> itemMap);
 
     List<CharacterEquipment> findByCharacter(Character character);
+
+    void deleteByCharacter(Character character);
 }

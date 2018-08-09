@@ -17,4 +17,6 @@ public interface CharacterService {
     void onEquipmentUpdate(Character character, LocalDateTime timestamp);
 
     List<Character> findByAccount(Account account);
+
+    void deleteCharacter(Integer accountId, Integer id);
 }

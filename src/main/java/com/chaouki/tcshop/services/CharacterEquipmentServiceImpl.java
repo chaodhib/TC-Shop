@@ -48,4 +48,9 @@ public class CharacterEquipmentServiceImpl implements CharacterEquipmentService 
     public List<CharacterEquipment> findByCharacter(Character character) {
         return characterEquipmentDao.findByCharacter(character);
     }
+
+    @Override
+    public void deleteByCharacter(Character character) {
+        characterEquipmentDao.deleteByCharacter(character);
+    }
 }

@@ -21,7 +21,7 @@ public class CharacterConsumer implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterConsumer.class);
 
     private final static String TOPIC = "CHARACTER";
-    private static final int PAYLOAD_TOKEN_NUMBER = 4;
+    private static final int PAYLOAD_TOKEN_NUMBER = 5;
 
     @Value("${kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVERS;
@@ -58,7 +58,10 @@ public class CharacterConsumer implements Runnable {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     CharacterDTO characterDTO = parseMessage(record.value());
-                    characterService.createCharacter(characterDTO.accountId, characterDTO.id, characterDTO.name, characterDTO.characterClass);
+                    if(characterDTO.enabled)
+                        characterService.createCharacter(characterDTO.accountId, characterDTO.id, characterDTO.name, characterDTO.characterClass);
+                    else
+                        characterService.deleteCharacter(characterDTO.accountId, characterDTO.id);
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on character message processing", e);
                 }
@@ -77,6 +80,7 @@ public class CharacterConsumer implements Runnable {
         characterDTO.id = Integer.valueOf(tokens[1]);
         characterDTO.name = tokens[2];
         characterDTO.characterClass = CharacterClass.getByIndex(Integer.valueOf(tokens[3]));
+        characterDTO.enabled = "1".equals(tokens[4]);
         return characterDTO;
     }
 
@@ -90,5 +94,6 @@ public class CharacterConsumer implements Runnable {
         Integer accountId;
         String name;
         CharacterClass characterClass;
+        boolean enabled;
     }
 }
