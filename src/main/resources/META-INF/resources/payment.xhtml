@@ -8,6 +8,7 @@
 
 <h:head>
     <title>Payment</title>
+    <h:outputStylesheet name="/css/main.css" />
 </h:head>
 
 <h:body>
@@ -60,9 +61,8 @@
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="#{globalController.stripePublicKey}"
                     data-amount="#{cartController.cart.totalPrice * 100}"
-                    data-name="Demo Site"
-                    data-description="Widget"
-                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-name="TrinityCore Shop"
+                    data-image="https://www.trinitycore.org/images/logo2.png"
                     data-locale="auto"
                     data-currency="eur">
             </script>

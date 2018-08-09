@@ -1,8 +1,9 @@
-.authorization-div {
-  margin-top: 10px;
-  margin-bottom: 10px;
+#title {
+    display: inline;
+    vertical-align: center;
+    position: fixed;
 }
 
-.logout-form {
-  margin-top: 10px;
+#main_logo {
+    vertical-align: center;
 }

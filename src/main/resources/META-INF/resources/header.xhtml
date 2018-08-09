@@ -6,16 +6,17 @@
         xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <div class="ui-g">
-        <div class="ui-g-1">
-            <h3>TrinityCore Shop</h3>
+        <div class="ui-g-3">
+            <h:graphicImage id="main_logo" url="https://www.trinitycore.org/images/logo2.png"/>
+            <h1 id="title">TrinityCore Shop</h1>
         </div>
-        <div class="ui-g-9">
+        <div class="ui-g-7">
             <p:button href="characterList.xhtml" value="Character List"/>
             <p:button href="itemList.xhtml" value="Item List"/>
             <p:button href="cart.xhtml" value="Cart (#{cartController.cart.cartLines.size()} items)" id="cartLink"/>
             <p:button href="orderHistory.xhtml" value="Order List"/>
         </div>
-        <div class="ui-g-1">
+        <div class="ui-g-1" id="username">
             Welcome #{accountController.username}
         </div>
         <div class="ui-g-1">
