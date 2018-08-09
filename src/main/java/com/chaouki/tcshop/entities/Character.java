@@ -25,6 +25,9 @@ public class Character {
     @Column(name = "equipment_update_timestamp")
     private LocalDateTime equipmentUpdateTimestamp;
 
+    @Column(name = "is_deleted")
+    private boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -63,5 +66,13 @@ public class Character {
 
     public void setEquipmentUpdateTimestamp(LocalDateTime equipmentUpdateTimestamp) {
         this.equipmentUpdateTimestamp = equipmentUpdateTimestamp;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

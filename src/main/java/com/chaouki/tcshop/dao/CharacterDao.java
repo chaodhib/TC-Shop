@@ -8,9 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface CharacterDao extends JpaRepository<Character, Integer> {
-    List<Character> findByAccount(Account account);
+
+    @Query("SELECT charact FROM Character charact WHERE charact.account = ?1 AND charact.deleted = 0")
+    List<Character> findActiveCharsByAccount(Account account);
 
     @Modifying
     @Query("UPDATE Character char SET equipmentUpdateTimestamp = ?2 WHERE char = ?1")

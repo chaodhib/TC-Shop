@@ -26,7 +26,17 @@ public class CharacterServiceImpl implements CharacterService {
     private CharacterEquipmentService characterEquipmentService;
 
     @Override
-    public Character createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass) {
+    public void createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass) {
+
+        Optional<Character> optionalCharacter = characterDao.findById(characterId);
+        if(optionalCharacter.isPresent()){
+            // two case:
+            // 1) it's an out of order situation: a delete character message was received before the creation character message.
+            // 2) it's a duplicate: two creation messages were received. in that case, just ignore the second message.
+            // in both cases, there is nothing more to do.
+            return;
+        }
+
         Account account = accountService.findById(accountId).orElseThrow(IllegalArgumentException::new);
 
         Character character = new Character();
@@ -34,12 +44,16 @@ public class CharacterServiceImpl implements CharacterService {
         character.setAccount(account);
         character.setName(characterName);
         character.setCharacterClass(characterClass);
-        return characterDao.save(character);
+        characterDao.save(character);
     }
 
     @Override
     public Optional<Character> findById(Integer id) {
-        return characterDao.findById(id);
+        Optional<Character> characterOptional = characterDao.findById(id);
+        if(characterOptional.isPresent() && characterOptional.get().isDeleted())
+            return Optional.empty();
+
+        return characterOptional;
     }
 
     @Override
@@ -48,17 +62,22 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public List<Character> findByAccount(Account account) {
-        return characterDao.findByAccount(account);
+    public List<Character> findActiveCharsByAccount(Account account) {
+        return characterDao.findActiveCharsByAccount(account);
     }
 
     @Override
     public void deleteCharacter(Integer accountId, Integer characterId) {
         Character character = characterDao.findById(characterId).orElseThrow(IllegalArgumentException::new);
+
+        if(character.isDeleted())
+            return; // nothing to do then.
+
         if(!character.getAccount().getId().equals(accountId))
             throw new IllegalArgumentException("the character does not belong to the account provided");
 
         characterEquipmentService.deleteByCharacter(character);
-        characterDao.delete(character);
+        character.setDeleted(true);
+        characterDao.save(character);
     }
 }

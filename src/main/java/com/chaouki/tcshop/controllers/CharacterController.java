@@ -4,11 +4,7 @@ import com.chaouki.tcshop.entities.Account;
 import com.chaouki.tcshop.entities.Character;
 import com.chaouki.tcshop.services.AccountService;
 import com.chaouki.tcshop.services.CharacterService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -35,7 +31,7 @@ public class CharacterController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = ((User)authentication.getPrincipal()).getUsername();
         Account account = accountService.findByUsername(username);
-        characterList = characterService.findByAccount(account);
+        characterList = characterService.findActiveCharsByAccount(account);
     }
 
     public List<Character> getCharacterList() {

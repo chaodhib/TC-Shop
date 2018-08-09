@@ -12,6 +12,7 @@ create table character_
   character_class            tinyint      not null,
   account_id                 int          not null,
   equipment_update_timestamp datetime     null,
+  is_deleted                 bool         not null default 0,
 
   FOREIGN KEY FK_character_account (account_id) REFERENCES account (id)
 );
