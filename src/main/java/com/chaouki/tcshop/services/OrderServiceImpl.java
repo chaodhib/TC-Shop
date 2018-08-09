@@ -64,10 +64,13 @@ public class OrderServiceImpl implements OrderService {
 
         PaymentCheckStatus paymentCheckStatus = checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
         if (!paymentCheckStatus.equals(PaymentCheckStatus.SUCCESS)) {
-
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+            orderDao.save(order);
             return OrderCreationStatus.PAYMENT_FAILED;
         }
 
+        order.setStatus(OrderStatus.SENDING);
+        orderDao.save(order);
         deliverItems(order);
 
         return OrderCreationStatus.SUCCESS;
@@ -81,9 +84,15 @@ public class OrderServiceImpl implements OrderService {
         chargeParams.put("source", paymentDetails.getToken());
 
         try {
-            Charge.create(chargeParams);
+            Charge charge = Charge.create(chargeParams);
+            order.setStripeChargeId(charge.getId());
             return PaymentCheckStatus.SUCCESS;
         } catch (StripeException e) {
+            if(e instanceof CardException){
+                String chargeId = ((CardException) e).getCharge();
+                order.setStripeChargeId(chargeId);
+            }
+
             LOGGER.error("payment failed", e);
             return PaymentCheckStatus.FAILURE;
         }
@@ -93,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setCharacter(character);
         order.setDateTime(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
-        order.setStatus(OrderStatus.SENDING);
+        order.setStatus(OrderStatus.PAYMENT_VALIDATION);
         order.setOrderLineList(getOrderLineList(cart, order));
 
         return orderDao.save(order);
@@ -137,13 +146,13 @@ public class OrderServiceImpl implements OrderService {
         if(!order.getStatus().equals(OrderStatus.SENDING))
             throw new IllegalStateException("orderId " +order.getId());
 
-        order.setStatus(OrderStatus.WAITING_FOR_CONFIRMATION);
+        order.setStatus(OrderStatus.WAITING_FOR_DELIVERY);
         orderDao.save(order);
     }
 
     @Override
     public void flagOrderAsSentToGameServer(Order order) {
-        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
+        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_DELIVERY))
             throw new IllegalStateException("orderId " +order.getId());
 
         order.setStatus(OrderStatus.DELIVERED);

@@ -54,6 +54,7 @@ create table shop_order
   dateTime     datetime                       not null,
   status       int                            not null,
   character_id int                            not null,
+  stripe_charge_id varchar(255)               null,
 
   FOREIGN KEY FK_Order_Character (character_id) REFERENCES character_ (id)
 );

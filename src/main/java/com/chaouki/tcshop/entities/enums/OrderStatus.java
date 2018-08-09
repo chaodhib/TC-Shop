@@ -2,9 +2,11 @@ package com.chaouki.tcshop.entities.enums;
 
 public enum OrderStatus {
 
-    SENDING (1, "Sending"),
-    WAITING_FOR_CONFIRMATION (2, "Waiting for confirmation"),
-    DELIVERED (3, "Delivered");
+    PAYMENT_VALIDATION (1, "Sending"),
+    PAYMENT_FAILED (2, "Payment failed"),
+    SENDING (3, "Sending"),
+    WAITING_FOR_DELIVERY (4, "Waiting for delivery"),
+    DELIVERED (5, "Delivered");
 
     private final int idx;
     private final String label;

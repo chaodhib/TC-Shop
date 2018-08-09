@@ -28,6 +28,9 @@ public class Order {
 
     private LocalDateTime dateTime;
 
+    @Column(name = "stripe_charge_id")
+    private String stripeChargeId;
+
     public BigDecimal getTotalPrice() {
         BigDecimal total = BigDecimal.ZERO;
         for (OrderLine orderLine : orderLineList) {
@@ -75,5 +78,13 @@ public class Order {
 
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    public void setStripeChargeId(String stripeChargeId) {
+        this.stripeChargeId = stripeChargeId;
+    }
+
+    public String getStripeChargeId() {
+        return stripeChargeId;
     }
 }
