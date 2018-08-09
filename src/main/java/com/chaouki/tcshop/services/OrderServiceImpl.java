@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setCharacter(character);
         order.setDateTime(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
-        order.setStatus(OrderStatus.PAYMENT_VALIDATION);
+        order.setStatus(OrderStatus.AWAITING_PAYMENT);
         order.setOrderLineList(getOrderLineList(cart, order));
 
         return orderDao.save(order);
@@ -147,13 +147,13 @@ public class OrderServiceImpl implements OrderService {
         if(!order.getStatus().equals(OrderStatus.SENDING))
             throw new IllegalStateException("orderId " +order.getId());
 
-        order.setStatus(OrderStatus.WAITING_FOR_DELIVERY);
+        order.setStatus(OrderStatus.WAITING_FOR_CONFIRMATION);
         orderDao.save(order);
     }
 
     @Override
     public void flagOrderAsSentToGameServer(Order order) {
-        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_DELIVERY))
+        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
             throw new IllegalStateException("orderId " +order.getId());
 
         order.setStatus(OrderStatus.DELIVERED);
