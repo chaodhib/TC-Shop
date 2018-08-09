@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Payment</title>
+</h:head>
+
+<h:body>
+    <ui:include src="header.xhtml"/>
+
+    <p:growl id="growl" showDetail="true" keepAlive="true"/>
+
+    <p:panel header="Summary">
+        <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable">
+            <p:column headerText="Item ID">
+                <h:outputText value="#{line.item.entry}" />
+            </p:column>
+
+            <p:column headerText="Item name">
+                <h:outputText value="#{line.item.name}" />
+            </p:column>
+
+            <p:column headerText="Quantity">
+                <h:outputText value="#{line.quantity}  " />
+            </p:column>
+
+            <p:column headerText="Price per unit">
+                <h:outputText value="#{line.pricePerUnit}">
+                    <f:convertNumber type="currency" currencySymbol="€" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Subtotal">
+                <h:outputText value="#{line.subtotal}">
+                    <f:convertNumber type="currency" currencySymbol="€" />
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+
+        <p:panelGrid columns="2">
+            <h:outputLabel for="total" value="Total price: " />
+            <h:outputText id="total" value="#{cartController.cart.totalPrice}" >
+                <f:convertNumber type="currency" currencySymbol="€" />
+            </h:outputText>
+
+            <p:outputLabel for="character" value="Character: " />
+            <p:outputLabel id="character" value="#{orderStepOneController.character.name}" />
+        </p:panelGrid>
+    </p:panel>
+
+    <p:panel header="Payment">
+
+        <form action="orderOutcome.xhtml" method="POST">
+            <script
+                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="#{globalController.stripePublicKey}"
+                    data-amount="#{cartController.cart.totalPrice * 100}"
+                    data-name="Demo Site"
+                    data-description="Widget"
+                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-locale="auto"
+                    data-currency="eur">
+            </script>
+        </form>
+
+    </p:panel>
+
+</h:body>
+</html>

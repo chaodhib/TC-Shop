@@ -51,16 +51,13 @@
                 </h:outputText>
 
                 <p:outputLabel for="character" value="Character: " />
-                <p:selectOneMenu id="character" value="#{orderController.characterId}" style="width:125px" required="true">
+                <p:selectOneMenu id="character" value="#{orderStepOneController.characterId}" style="width:125px" required="true">
                     <f:selectItem itemLabel="Select One" itemValue="" />
                     <f:selectItems value="#{characterController.characterList}" var="chara"
                                    itemLabel="#{chara.name}" itemValue="#{chara.id}" />
                 </p:selectOneMenu>
 
-                <p:outputLabel for="paymentDetails" value="Credit Card n°: "/>
-                <p:inputText id="paymentDetails" value="#{orderController.paymentDetails}" required="true" />
-
-                <p:commandButton value="Start order" action="#{orderController.startOrder()}" update="growl dataTable cartLink character paymentDetails" disabled="#{cartController.cart.cartLines.isEmpty()}"/>
+                <p:commandButton value="Proceed to payment" action="#{orderStepOneController.proceedToPayment}" ajax="false" disabled="#{cartController.cart.cartLines.isEmpty()}"/>
             </p:panelGrid>
 
              </h:form>

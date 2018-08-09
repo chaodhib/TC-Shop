@@ -9,20 +9,26 @@ import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.OrderLine;
 import com.chaouki.tcshop.entities.enums.OrderStatus;
 import com.chaouki.tcshop.messaging.GearPurchaseProducer;
-import org.apache.commons.lang3.NotImplementedException;
+import com.stripe.Stripe;
+import com.stripe.exception.*;
+import com.stripe.model.Charge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -39,25 +45,48 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private GearPurchaseProducer gearPurchaseProducer;
 
+    @Value("${stripe.secret.key}")
+    String secretKey;
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = secretKey;
+        Stripe.setConnectTimeout(30 * 1000);
+        Stripe.setReadTimeout(30 * 1000);
+    }
+
     @Override
-    public OrderCreationStatus createOrder(Integer characterId, String paymentDetails, Cart cart) {
+    public OrderCreationStatus createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart) {
         Character character = characterService.findById(characterId).orElseThrow(IllegalArgumentException::new);
         Assert.notEmpty(cart.getCartLines(), "the cart shouldn't be empty");
 
-        PaymentCheckStatus paymentCheckStatus = checkPaymentDetails(paymentDetails, cart.getTotalPrice());
+        Order order = persistOrder(character, cart);
+
+        PaymentCheckStatus paymentCheckStatus = checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
         if (!paymentCheckStatus.equals(PaymentCheckStatus.SUCCESS)) {
 
             return OrderCreationStatus.PAYMENT_FAILED;
         }
 
-        Order order = persistOrder(character, cart);
         deliverItems(order);
 
         return OrderCreationStatus.SUCCESS;
     }
 
-    private PaymentCheckStatus checkPaymentDetails(String paymentDetails, BigDecimal totalPrice) {
-        return PaymentCheckStatus.SUCCESS;
+    private PaymentCheckStatus checkPaymentDetails(Order order, StripePaymentDetails paymentDetails, BigDecimal totalPrice) {
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("amount", totalPrice.multiply(BigDecimal.valueOf(100)).toBigIntegerExact().intValue());
+        chargeParams.put("currency", "EUR");
+        chargeParams.put("description", "order " + order.getId());
+        chargeParams.put("source", paymentDetails.getToken());
+
+        try {
+            Charge.create(chargeParams);
+            return PaymentCheckStatus.SUCCESS;
+        } catch (StripeException e) {
+            LOGGER.error("payment failed", e);
+            return PaymentCheckStatus.FAILURE;
+        }
     }
 
     private Order persistOrder(Character character, Cart cart) {
