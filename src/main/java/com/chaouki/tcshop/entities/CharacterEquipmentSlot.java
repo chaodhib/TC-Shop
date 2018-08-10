@@ -36,4 +36,19 @@ public class CharacterEquipmentSlot implements Serializable {
     public EquipmentSlot getEquipmentSlot() {
         return equipmentSlot;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharacterEquipmentSlot that = (CharacterEquipmentSlot) o;
+        return Objects.equals(character, that.character) &&
+                equipmentSlot == that.equipmentSlot;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(character, equipmentSlot);
+    }
 }
