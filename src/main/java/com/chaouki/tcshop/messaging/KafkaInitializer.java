@@ -6,31 +6,17 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 @Component
 public class KafkaInitializer {
 
     @Autowired
-    private AsyncTaskExecutor taskExecutor;
-
-    @Autowired
-    private AccountConsumer accountConsumer;
-
-    @Autowired
-    private CharacterConsumer characterConsumer;
-
-    @Autowired
-    private GearSnapshotConsumer gearSnapshotConsumer;
-
-    @Autowired
-    private GearPurchaseAckConsumer gearPurchaseAckConsumer;
+    private KafkaAsyncConsumerStarter consumerStarter;
 
     @PostConstruct
-    public void init(){
-        taskExecutor.submit(accountConsumer);
-        taskExecutor.submit(characterConsumer);
-        taskExecutor.submit(gearSnapshotConsumer);
-        taskExecutor.submit(gearPurchaseAckConsumer);
+    public void init() {
+        consumerStarter.start();
     }
 }
