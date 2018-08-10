@@ -20,7 +20,7 @@ public class Order {
     @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy = "order")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
     private List<OrderLine> orderLineList;
 
     @ManyToOne
