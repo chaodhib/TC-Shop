@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    Account createAccount(Integer id, String username, String hashedPassword);
+    void createAccount(Integer id, String username, String hashedPassword);
 
     Optional<Account> findById(Integer id);
 

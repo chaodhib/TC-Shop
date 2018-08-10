@@ -28,8 +28,7 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public void createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass) {
 
-        Optional<Character> optionalCharacter = characterDao.findById(characterId);
-        if(optionalCharacter.isPresent()){
+        if(characterDao.findById(characterId).isPresent()){
             // two case:
             // 1) it's an out of order situation: a delete character message was received before the creation character message.
             // 2) it's a duplicate: two creation messages were received. in that case, just ignore the second message.
@@ -71,7 +70,7 @@ public class CharacterServiceImpl implements CharacterService {
         Character character = characterDao.findById(characterId).orElseThrow(IllegalArgumentException::new);
 
         if(character.isDeleted())
-            return; // nothing to do then.
+            return; // duplicate message. nothing to do then.
 
         if(!character.getAccount().getId().equals(accountId))
             throw new IllegalArgumentException("the character does not belong to the account provided");

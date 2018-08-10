@@ -63,8 +63,7 @@ public class GearPurchaseAckConsumer implements Runnable {
 
                     GearPurchaseAckDTO dto = parseMessage(record.value());
                     if (dto.success) {
-                        Order order = orderService.findById(dto.orderId);
-                        orderService.flagOrderAsSentToGameServer(order);
+                        orderService.flagOrderAsSentToGameServer(dto.orderId);
                     }
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on gear snapshot message processing", e);

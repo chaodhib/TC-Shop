@@ -152,7 +152,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void flagOrderAsSentToGameServer(Order order) {
+    public void flagOrderAsSentToGameServer(Integer orderId) {
+        Order order = orderDao.findById(orderId).orElseThrow(IllegalArgumentException::new);
+
+        // handle duplicate messages case
+        if(order.getStatus().equals(OrderStatus.DELIVERED))
+            return;
+
         if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
             throw new IllegalStateException("orderId " +order.getId());
 

@@ -14,12 +14,16 @@ public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao;
 
     @Override
-    public Account createAccount(Integer id, String username, String hashedPassword) {
+    public void createAccount(Integer id, String username, String hashedPassword) {
+
+        if(accountDao.findById(id).isPresent()) // duplicate message. ignore.
+            return;
+
         Account account = new Account();
         account.setId(id);
         account.setUsername(username);
         account.setHashedPassword(hashedPassword);
-        return accountDao.save(account);
+        accountDao.save(account);
     }
 
     @Override

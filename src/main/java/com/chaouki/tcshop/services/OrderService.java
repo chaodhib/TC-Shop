@@ -11,7 +11,7 @@ public interface OrderService {
 
     void flagOrderAsSentToMessageBroker(Order order);
 
-    void flagOrderAsSentToGameServer(Order order);
+    void flagOrderAsSentToGameServer(Integer order);
 
     Order findById(Integer id);
 

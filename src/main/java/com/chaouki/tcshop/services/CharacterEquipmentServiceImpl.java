@@ -32,6 +32,11 @@ public class CharacterEquipmentServiceImpl implements CharacterEquipmentService 
     @Override
     public void updateEquipment(Integer characterId, LocalDateTime timestamp, Map<Integer, Integer> itemMap) {
         Character character = characterService.findById(characterId).orElseThrow(IllegalArgumentException::new);
+
+        // either it's a duplicate message. or an out of order message. in both case: just ignore the message.
+        if(character.getEquipmentUpdateTimestamp() != null && character.getEquipmentUpdateTimestamp().compareTo(timestamp) >= 0)
+            return;
+
         characterEquipmentDao.deleteByCharacter(character);
         for (Map.Entry<Integer, Integer> integerIntegerEntry : itemMap.entrySet()) {
             CharacterEquipment characterEquipment = new CharacterEquipment();
