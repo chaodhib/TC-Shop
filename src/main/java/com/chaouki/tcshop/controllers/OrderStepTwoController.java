@@ -18,11 +18,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 @ManagedBean
 @RequestScoped
-public class OrderStepTwoController {
+public class OrderStepTwoController implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderStepTwoController.class);
 

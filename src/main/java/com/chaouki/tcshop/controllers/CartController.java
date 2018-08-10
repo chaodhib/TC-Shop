@@ -11,10 +11,11 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
-public class CartController {
+public class CartController implements Serializable {
 
     @Autowired
     private ItemCatalogService itemCatalogService;

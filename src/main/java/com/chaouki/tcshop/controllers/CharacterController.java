@@ -12,11 +12,12 @@ import org.springframework.security.core.userdetails.User;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import java.io.Serializable;
 import java.util.List;
 
 @ManagedBean
 @ViewScoped
-public class CharacterController {
+public class CharacterController implements Serializable {
 
     @Autowired
     private CharacterService characterService;

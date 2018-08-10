@@ -12,11 +12,12 @@ import org.springframework.security.core.userdetails.User;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import java.io.Serializable;
 import java.util.List;
 
 @ManagedBean
 @ViewScoped
-public class OrderHistoryController {
+public class OrderHistoryController implements Serializable {
 
     @Autowired
     private AccountService accountService;

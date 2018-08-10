@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
-public class OrderStepOneController {
+public class OrderStepOneController implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderStepOneController.class);
 

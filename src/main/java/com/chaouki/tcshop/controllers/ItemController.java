@@ -19,6 +19,7 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @ManagedBean
 @ViewScoped
-public class ItemController {
+public class ItemController implements Serializable {
 
     @Autowired
     private ItemTemplateService itemTemplateService;

@@ -20,13 +20,14 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @ManagedBean
 @ViewScoped
-public class CharacterEquipmentController {
+public class CharacterEquipmentController implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterEquipmentController.class);
 
