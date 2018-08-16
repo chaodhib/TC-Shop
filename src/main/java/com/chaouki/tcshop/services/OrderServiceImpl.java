@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void flagOrderAsSentToMessageBroker(Order order) {
+    public void flagOrderAsAcceptedByMessageBroker(Order order) {
         if(!order.getStatus().equals(OrderStatus.SENDING))
             throw new IllegalStateException("orderId " +order.getId());
 
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void flagOrderAsSentToGameServer(Integer orderId) {
+    public void flagOrderAsAcceptedByGameServer(Integer orderId) {
         Order order = orderDao.findById(orderId).orElseThrow(IllegalArgumentException::new);
 
         // handle duplicate messages case
@@ -163,6 +163,21 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("orderId " +order.getId());
 
         order.setStatus(OrderStatus.DELIVERED);
+        orderDao.save(order);
+    }
+
+    @Override
+    public void flagOrderAsRefusedByGameServer(Integer orderId) {
+        Order order = orderDao.findById(orderId).orElseThrow(IllegalArgumentException::new);
+
+        // handle duplicate messages case
+        if(order.getStatus().equals(OrderStatus.DELIVERY_FAILED))
+            return;
+
+        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
+            throw new IllegalStateException("orderId " +order.getId());
+
+        order.setStatus(OrderStatus.DELIVERY_FAILED);
         orderDao.save(order);
     }
 

@@ -6,7 +6,8 @@ public enum OrderStatus {
     PAYMENT_FAILED (2, "Payment failed"),
     SENDING (3, "Sending"),
     WAITING_FOR_CONFIRMATION(4, "Waiting for confirmation"),
-    DELIVERED (5, "Delivered");
+    DELIVERED (5, "Delivered"),
+    DELIVERY_FAILED (6, "Delivery failed");
 
     private final int idx;
     private final String label;

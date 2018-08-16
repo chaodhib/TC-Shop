@@ -9,9 +9,11 @@ import java.util.List;
 public interface OrderService {
     CreateOrderResult createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart);
 
-    void flagOrderAsSentToMessageBroker(Order order);
+    void flagOrderAsAcceptedByMessageBroker(Order order);
 
-    void flagOrderAsSentToGameServer(Integer order);
+    void flagOrderAsAcceptedByGameServer(Integer order);
+
+    void flagOrderAsRefusedByGameServer(Integer orderId);
 
     Order findById(Integer id);
 
