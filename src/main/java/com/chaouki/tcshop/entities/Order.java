@@ -26,6 +26,7 @@ public class Order {
     @ManyToOne
     private Character character;
 
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
 
     @Column(name = "stripe_charge_id")

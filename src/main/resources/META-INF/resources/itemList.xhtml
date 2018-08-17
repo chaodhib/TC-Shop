@@ -65,7 +65,7 @@
                 </p:column>
 
                 <p:column headerText="Price per unit">
-                    <h:outputText value="#{itemController.getItemPricePerUnit(item)}">
+                    <h:outputText value="#{item.currentUnitPrice}">
                         <f:convertNumber type="currency" currencySymbol="€" />
                     </h:outputText>
                 </p:column>

@@ -7,6 +7,7 @@ import com.chaouki.tcshop.entities.enums.ItemQuality;
 import com.chaouki.tcshop.entities.enums.ItemSubClass;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "item_template")
@@ -28,21 +29,27 @@ public class ItemTemplate {
     private Integer displayId;
 
     @Convert(converter = ItemQualityConverter.class)
-    @Column(name = "Quality", columnDefinition = "TINYINT")
+    @Column(name = "quality", columnDefinition = "TINYINT")
     private ItemQuality itemQuality;
 
     @Convert(converter = InventoryTypeConverter.class)
-    @Column(name = "InventoryType", columnDefinition = "TINYINT")
+    @Column(name = "inventory_type", columnDefinition = "TINYINT")
     private InventoryType inventoryType;
 
-    @Column(name = "ItemLevel", columnDefinition = "SMALLINT")
+    @Column(name = "item_level", columnDefinition = "SMALLINT")
     private Integer itemLevel;
 
-    @Column(name = "RequiredLevel", columnDefinition = "TINYINT")
+    @Column(name = "required_level", columnDefinition = "TINYINT")
     private Integer requiredLevel;
 
     @Column(name = "stackable")
     private Integer countPerStackMax;
+
+    @Column(name = "is_purchasable")
+    private boolean isPurchasable;
+
+    @Column(name = "current_unit_price")
+    private BigDecimal currentUnitPrice;
 
     public Integer getEntry() {
         return entry;
@@ -82,5 +89,13 @@ public class ItemTemplate {
 
     public Integer getDisplayId() {
         return displayId;
+    }
+
+    public boolean isPurchasable() {
+        return isPurchasable;
+    }
+
+    public BigDecimal getCurrentUnitPrice() {
+        return currentUnitPrice;
     }
 }

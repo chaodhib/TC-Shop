@@ -13,6 +13,7 @@ public class OrderLine {
 
     private Integer quantity;
 
+    @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
     @ManyToOne

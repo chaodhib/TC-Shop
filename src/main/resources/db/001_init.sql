@@ -19,16 +19,18 @@ create table character_
 
 create table item_template
 (
-  entry         mediumint unsigned default '0'   not null primary key,
-  class         tinyint unsigned default '0'     not null,
-  subclass      tinyint unsigned default '0'     not null,
-  name          varchar(255) default ''          not null,
-  displayid     mediumint unsigned default '0'   not null,
-  Quality       tinyint unsigned default '0'     not null,
-  InventoryType tinyint unsigned default '0'     not null,
-  ItemLevel     smallint(5) unsigned default '0' not null,
-  RequiredLevel tinyint unsigned default '0'     not null,
-  stackable     int default '1'                  null
+  entry              mediumint unsigned default '0'   not null primary key,
+  class              tinyint unsigned default '0'     not null,
+  subclass           tinyint unsigned default '0'     not null,
+  name               varchar(255) default ''          not null,
+  displayid          mediumint unsigned default '0'   not null,
+  quality            tinyint unsigned default '0'     not null,
+  inventory_type     tinyint unsigned default '0'     not null,
+  item_level         smallint(5) unsigned default '0' not null,
+  required_level     tinyint unsigned default '0'     not null,
+  stackable          int default '1'                  null,
+  is_purchasable     bool                             not null,
+  current_unit_price decimal(19, 2)                   not null
 );
 
 create index idx_name
@@ -50,11 +52,11 @@ create table character_equipment
 
 create table shop_order
 (
-  id           int auto_increment primary key not null,
-  dateTime     datetime                       not null,
-  status       int                            not null,
-  character_id int                            not null,
-  stripe_charge_id varchar(255)               null,
+  id               int auto_increment primary key not null,
+  date_time        datetime                       not null,
+  status           int                            not null,
+  character_id     int                            not null,
+  stripe_charge_id varchar(255)                   null,
 
   FOREIGN KEY FK_Order_Character (character_id) REFERENCES character_ (id)
 );
@@ -63,7 +65,7 @@ create table shop_order_line
 (
   id         int auto_increment primary key not null,
   quantity   int                            not null,
-  unitPrice  decimal(19, 2)                 not null,
+  unit_price decimal(19, 2)                 not null,
   item_entry mediumint unsigned             not null,
   order_id   int                            not null,
 
