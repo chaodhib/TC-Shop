@@ -32,7 +32,7 @@
                 <p:column headerText="Quantity">
                     <h:outputText value="#{line.quantity}  " />
                     <p:commandButton value="+" action="#{cartController.incQuantity(line)}" update="cartLink dataTable total"/>
-                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable total"/>
+                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable total checkOutBt"/>
                 </p:column>
 
                 <p:column headerText="Price per unit">
