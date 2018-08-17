@@ -35,7 +35,6 @@ import java.util.Map;
 public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
-    public static final String STATUS_SUCCESS = "success";
 
     @Autowired
     private OrderDao orderDao;
@@ -45,6 +44,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private GearPurchaseProducer gearPurchaseProducer;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Value("${stripe.secret.key}")
     String secretKey;
@@ -63,8 +65,8 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = persistOrder(character, cart);
 
-        String paymentStatus = checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
-        if (!STATUS_SUCCESS.equals(paymentStatus)) {
+        String paymentStatus = paymentService.checkPaymentDetails(order, paymentDetails, cart.getTotalPrice());
+        if (!PaymentService.STATUS_SUCCESS.equals(paymentStatus)) {
             order.setStatus(OrderStatus.PAYMENT_FAILED);
             orderDao.save(order);
             return new CreateOrderResult(OrderCreationStatus.PAYMENT_FAILED, paymentStatus);
@@ -75,28 +77,6 @@ public class OrderServiceImpl implements OrderService {
         deliverItems(order);
 
         return new CreateOrderResult(OrderCreationStatus.SUCCESS);
-    }
-
-    private String checkPaymentDetails(Order order, StripePaymentDetails paymentDetails, BigDecimal totalPrice) {
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", totalPrice.multiply(BigDecimal.valueOf(100)).toBigIntegerExact().intValue());
-        chargeParams.put("currency", "EUR");
-        chargeParams.put("description", "order " + order.getId());
-        chargeParams.put("source", paymentDetails.getToken());
-
-        try {
-            Charge charge = Charge.create(chargeParams);
-            order.setStripeChargeId(charge.getId());
-            return STATUS_SUCCESS;
-        } catch (StripeException e) {
-            if(e instanceof CardException){
-                String chargeId = ((CardException) e).getCharge();
-                order.setStripeChargeId(chargeId);
-            }
-
-            LOGGER.warn("payment failed", e);
-            return e.getCode();
-        }
     }
 
     private Order persistOrder(Character character, Cart cart) {
@@ -176,6 +156,8 @@ public class OrderServiceImpl implements OrderService {
 
         if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
             throw new IllegalStateException("orderId " +order.getId());
+
+        paymentService.refundCustomerOfOrder(order);
 
         order.setStatus(OrderStatus.DELIVERY_FAILED);
         orderDao.save(order);
