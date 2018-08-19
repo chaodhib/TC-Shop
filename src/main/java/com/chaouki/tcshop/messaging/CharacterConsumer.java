@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -56,7 +57,7 @@ public class CharacterConsumer implements Runnable {
     public void run() {
 
         while (true) {
-            final ConsumerRecords<String, String> consumerRecords = consumer.poll(1000);
+            final ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofMillis(1000));
             if(consumerRecords.isEmpty() && characterLatch.getCount() == 1){
                 characterLatch.countDown();
                 LOGGER.info("Initial Account processing finished");
