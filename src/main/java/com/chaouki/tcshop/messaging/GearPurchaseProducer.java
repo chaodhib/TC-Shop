@@ -78,7 +78,7 @@ public class GearPurchaseProducer {
 
         for (OrderLine orderLine : order.getOrderLineList()) {
             sb.append("#");
-            sb.append(orderLine.getItem().getEntry());
+            sb.append(orderLine.getPurchasableItem().getItemTemplate().getEntry());
             sb.append(":");
             sb.append(orderLine.getQuantity());
         }

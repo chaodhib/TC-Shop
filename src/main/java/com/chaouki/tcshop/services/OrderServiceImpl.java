@@ -92,15 +92,14 @@ public class OrderServiceImpl implements OrderService {
     private ArrayList<OrderLine> getOrderLineList(Cart cart, Order order) {
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         for (CartLine cartLine : cart.getCartLines()) {
-            Integer countPerStackMax = cartLine.getItem().getCountPerStackMax();
+            Integer countPerStackMax = cartLine.getPurchasableItem().getItemTemplate().getCountPerStackMax();
 
             int nbOfStacks = cartLine.getQuantity()/countPerStackMax;
             // create nbOfStacks stacks, with each stack on maximum amount.
             for (int i = 0; i < nbOfStacks; i++) {
                 OrderLine orderLine = new OrderLine();
-                orderLine.setItem(cartLine.getItem());
+                orderLine.setPurchasableItem(cartLine.getPurchasableItem());
                 orderLine.setQuantity(cartLine.getQuantity());
-                orderLine.setUnitPrice(cartLine.getPricePerUnit());
                 orderLine.setOrder(order);
                 orderLines.add(orderLine);
             }
@@ -108,9 +107,8 @@ public class OrderServiceImpl implements OrderService {
             // create up to 1 stack of non maximum amount
             if(cartLine.getQuantity() % countPerStackMax != 0) {
                 OrderLine orderLine = new OrderLine();
-                orderLine.setItem(cartLine.getItem());
+                orderLine.setPurchasableItem(cartLine.getPurchasableItem());
                 orderLine.setQuantity(cartLine.getQuantity() % countPerStackMax);
-                orderLine.setUnitPrice(cartLine.getPricePerUnit());
                 orderLine.setOrder(order);
                 orderLines.add(orderLine);
             }

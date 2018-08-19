@@ -1,6 +1,7 @@
 package com.chaouki.tcshop.controllers.dto;
 
 import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.PurchasableItem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,18 +19,17 @@ public class Cart {
         return cartLines;
     }
 
-    public void add(ItemTemplate itemTemplateEntry, int addQuantity, BigDecimal itemPricePerUnit) {
+    public void add(PurchasableItem purchasableItem, int addQuantity, BigDecimal itemPricePerUnit) {
         for (CartLine cartLine : cartLines) {
-            if(cartLine.getItem().getEntry().equals(itemTemplateEntry.getEntry())) {
+            if(cartLine.getPurchasableItem().getItemTemplate().getEntry().equals(purchasableItem.getItemTemplate().getEntry())) {
                 cartLine.setQuantity(cartLine.getQuantity() + addQuantity);
                 return;
             }
         }
 
         CartLine cartLine = new CartLine();
-        cartLine.setItem(itemTemplateEntry);
+        cartLine.setPurchasableItem(purchasableItem);
         cartLine.setQuantity(addQuantity);
-        cartLine.setPricePerUnit(itemPricePerUnit);
         cartLines.add(cartLine);
     }
 

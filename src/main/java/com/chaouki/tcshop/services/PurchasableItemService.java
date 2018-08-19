@@ -1,6 +1,6 @@
 package com.chaouki.tcshop.services;
 
-import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.PurchasableItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,9 +8,9 @@ import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
-public interface ItemTemplateService {
+public interface PurchasableItemService {
 
-    Optional<ItemTemplate> findById(Integer id);
+    Optional<PurchasableItem> findById(Integer id);
 
-    Page<ItemTemplate> findAll(@Nullable Specification<ItemTemplate> spec, Pageable pageable);
+    Page<PurchasableItem> findAll(@Nullable Specification<PurchasableItem> spec, Pageable pageable);
 }

@@ -20,23 +20,23 @@
 
         <p:panel header="Cart">
 
-            <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable">
+            <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable" emptyMessage="No item in the cart.">
                 <p:column headerText="Item ID">
-                    <h:outputText value="#{line.item.entry}" />
+                    <h:outputText value="#{line.purchasableItem.itemTemplate.entry}" />
                 </p:column>
 
                 <p:column headerText="Item name">
-                    <h:outputText value="#{line.item.name}" />
+                    <h:outputText value="#{line.purchasableItem.itemTemplate.name}" />
                 </p:column>
 
                 <p:column headerText="Quantity">
                     <h:outputText value="#{line.quantity}  " />
                     <p:commandButton value="+" action="#{cartController.incQuantity(line)}" update="cartLink dataTable total"/>
-                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable total checkOutBt"/>
+                    <p:commandButton value="-" action="#{cartController.decQuantity(line)}" update="cartLink dataTable total checkOutBt "/>
                 </p:column>
 
                 <p:column headerText="Price per unit">
-                    <h:outputText value="#{line.pricePerUnit}">
+                    <h:outputText value="#{line.purchasableItem.unitPrice}">
                         <f:convertNumber type="currency" currencySymbol="€" />
                     </h:outputText>
                 </p:column>

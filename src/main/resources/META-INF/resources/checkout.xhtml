@@ -20,11 +20,11 @@
 
             <p:dataTable var="line" value="#{cartController.cart.cartLines}" id="dataTable">
                 <p:column headerText="Item ID">
-                    <h:outputText value="#{line.item.entry}" />
+                    <h:outputText value="#{line.purchasableItem.itemTemplate.entry}" />
                 </p:column>
 
                 <p:column headerText="Item name">
-                    <h:outputText value="#{line.item.name}" />
+                    <h:outputText value="#{line.purchasableItem.itemTemplate.name}" />
                 </p:column>
 
                 <p:column headerText="Quantity">
@@ -32,7 +32,7 @@
                 </p:column>
 
                 <p:column headerText="Price per unit">
-                    <h:outputText value="#{line.pricePerUnit}">
+                    <h:outputText value="#{line.purchasableItem.unitPrice}">
                         <f:convertNumber type="currency" currencySymbol="€" />
                     </h:outputText>
                 </p:column>

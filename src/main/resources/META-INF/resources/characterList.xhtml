@@ -18,7 +18,7 @@
 
         <p:panel header="Character list">
 
-            <p:dataTable var="ch" value="#{characterController.characterList}" id="dataTable">
+            <p:dataTable var="ch" value="#{characterController.characterList}" id="dataTable" emptyMessage="No character registered on this account.">
                 <p:column headerText="GUID" width="40">
                     <h:outputText value="#{ch.id}" />
                 </p:column>

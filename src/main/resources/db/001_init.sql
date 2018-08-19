@@ -5,6 +5,9 @@ create table account
   username        varchar(255) not null
 );
 
+create index idx_username
+  on account (username);
+
 create table character_
 (
   id                         int          not null primary key,
@@ -19,18 +22,16 @@ create table character_
 
 create table item_template
 (
-  entry              mediumint unsigned default '0'   not null primary key,
-  class              tinyint unsigned default '0'     not null,
-  subclass           tinyint unsigned default '0'     not null,
-  name               varchar(255) default ''          not null,
-  displayid          mediumint unsigned default '0'   not null,
-  quality            tinyint unsigned default '0'     not null,
-  inventory_type     tinyint unsigned default '0'     not null,
-  item_level         smallint(5) unsigned default '0' not null,
-  required_level     tinyint unsigned default '0'     not null,
-  stackable          int default '1'                  null,
-  is_purchasable     bool                             not null,
-  current_unit_price decimal(19, 2)                   not null
+  entry          mediumint unsigned default '0'   not null primary key,
+  class          tinyint unsigned default '0'     not null,
+  subclass       tinyint unsigned default '0'     not null,
+  name           varchar(255) default ''          not null,
+  displayid      mediumint unsigned default '0'   not null,
+  quality        tinyint unsigned default '0'     not null,
+  inventory_type tinyint unsigned default '0'     not null,
+  item_level     smallint(5) unsigned default '0' not null,
+  required_level tinyint unsigned default '0'     not null,
+  stackable      int default '1'                  null
 );
 
 create index idx_name
@@ -38,6 +39,16 @@ create index idx_name
 
 create index items_index
   on item_template (class);
+
+create table purchasable_item
+(
+  id               int auto_increment primary key not null,
+  item_template_id mediumint unsigned             not null,
+  is_available     bool                           not null,
+  unit_price       decimal(19, 2)                 not null,
+
+  FOREIGN KEY FK_PurchasableItem_ItemTemplate (item_template_id) REFERENCES item_template (entry)
+);
 
 create table character_equipment
 (
@@ -63,12 +74,11 @@ create table shop_order
 
 create table shop_order_line
 (
-  id         int auto_increment primary key not null,
-  quantity   int                            not null,
-  unit_price decimal(19, 2)                 not null,
-  item_entry mediumint unsigned             not null,
-  order_id   int                            not null,
+  id                  int auto_increment primary key not null,
+  quantity            int                            not null,
+  purchasable_item_id int                            not null,
+  order_id            int                            not null,
 
   FOREIGN KEY FK_OrderLine_Order (order_id) REFERENCES shop_order (id),
-  FOREIGN KEY FK_OrderLine_Item (item_entry) REFERENCES item_template (entry)
+  FOREIGN KEY FK_OrderLine_PurchasableItem (purchasable_item_id) REFERENCES purchasable_item (id)
 );

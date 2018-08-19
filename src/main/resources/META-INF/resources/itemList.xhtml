@@ -20,52 +20,52 @@
     <h:form >
         <p:panel header="Item catalog">
 
-            <p:dataTable var="item" value="#{itemController.itemTemplates}" id="dataTable"
+            <p:dataTable var="item" value="#{itemController.itemList}" id="dataTable"
                          paginator="true" rows="10"
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                          rowsPerPageTemplate="5,10,20" lazy="true"
                          filteredValue="#{itemController.filteredItems}"
             >
-                <p:column headerText="ID" filterBy="#{item.entry}">
-                    <h:outputText value="#{item.entry}" />
+                <p:column headerText="ID" filterBy="#{item.itemTemplate.entry}">
+                    <h:outputText value="#{item.itemTemplate.entry}" />
                 </p:column>
 
-                <p:column headerText="Name" filterBy="#{item.name}" style="background-color: black">
-                    <a href="https://wotlk.evowow.com/?item=#{item.entry}" style="text-decoration:none;">
-                        <h:outputText value="#{item.name}"  style=" color: #{item.itemQuality.hexRGB}" />
+                <p:column headerText="Name" filterBy="#{item.itemTemplate.name}" style="background-color: black">
+                    <a href="https://wotlk.evowow.com/?item=#{item.itemTemplate.entry}" style="text-decoration:none;">
+                        <h:outputText value="#{item.itemTemplate.name}"  style=" color: #{item.itemTemplate.itemQuality.hexRGB}" />
                     </a>
                 </p:column>
 
                 <p:column headerText="Class"
-                          filterBy="#{item.itemClass.idx}"
+                          filterBy="#{item.itemTemplate.itemClass.idx}"
                           filterOptions="#{itemController.itemClassOptions}"
                 >
-                    <h:outputText value="#{item.itemClass.label}" />
+                    <h:outputText value="#{item.itemTemplate.itemClass.label}" />
                 </p:column>
 
                 <p:column headerText="Subclass">
-                    <h:outputText value="#{item.itemSubClass.label}" />
+                    <h:outputText value="#{item.itemTemplate.itemSubClass.label}" />
                 </p:column>
 
                 <p:column headerText="Item level">
-                    <h:outputText value="#{item.itemLevel}" />
+                    <h:outputText value="#{item.itemTemplate.itemLevel}" />
                 </p:column>
 
                 <p:column headerText="Min Character level"
-                          filterBy="#{item.requiredLevel}"
+                          filterBy="#{item.itemTemplate.requiredLevel}"
                 >
-                    <h:outputText value="#{item.requiredLevel != 0 ? item.requiredLevel : ''}" />
+                    <h:outputText value="#{item.itemTemplate.requiredLevel != 0 ? item.itemTemplate.requiredLevel : ''}" />
                 </p:column>
 
                 <p:column headerText="Slot"
-                          filterBy="#{item.inventoryType.idx}"
+                          filterBy="#{item.itemTemplate.inventoryType.idx}"
                           filterOptions="#{itemController.inventoryTypeOptions}"
                 >
-                    <h:outputText value="#{item.inventoryType.label}" />
+                    <h:outputText value="#{item.itemTemplate.inventoryType.label}" />
                 </p:column>
 
                 <p:column headerText="Price per unit">
-                    <h:outputText value="#{item.currentUnitPrice}">
+                    <h:outputText value="#{item.unitPrice}">
                         <f:convertNumber type="currency" currencySymbol="€" />
                     </h:outputText>
                 </p:column>

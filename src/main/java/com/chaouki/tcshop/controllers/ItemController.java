@@ -1,9 +1,10 @@
 package com.chaouki.tcshop.controllers;
 
-import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.PurchasableItem;
+import com.chaouki.tcshop.entities.PurchasableItem;
 import com.chaouki.tcshop.entities.enums.InventoryType;
 import com.chaouki.tcshop.entities.enums.ItemClass;
-import com.chaouki.tcshop.services.ItemTemplateService;
+import com.chaouki.tcshop.services.PurchasableItemService;
 import org.primefaces.model.LazyDataModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,31 +22,31 @@ import java.util.stream.Collectors;
 public class ItemController implements Serializable {
 
     @Autowired
-    private ItemTemplateService itemTemplateService;
+    private PurchasableItemService purchasableItemService;
 
-    private LazyDataModel<ItemTemplate> itemTemplates;
-    private List<ItemTemplate> filteredItems;
+    private LazyDataModel<PurchasableItem> itemList;
+    private List<PurchasableItem> filteredItems;
     private List<SelectItem> itemClassOptions;
     private List<SelectItem> inventoryTypeOptions;
 
     @PostConstruct
     public void init(){
-        itemTemplates = new ItemLazyDataModel(itemTemplateService);
+        itemList = new ItemLazyDataModel(purchasableItemService);
         itemClassOptions = Arrays.stream(ItemClass.values()).map(itemClass -> new SelectItem(itemClass.getIdx(),itemClass.getLabel())).collect(Collectors.toList());
         itemClassOptions.add(0, new SelectItem(""));
         inventoryTypeOptions = Arrays.stream(InventoryType.values()).map(inventoryType -> new SelectItem(inventoryType.getIdx(),inventoryType.getLabel())).collect(Collectors.toList());
         inventoryTypeOptions.add(0, new SelectItem(""));
     }
 
-    public LazyDataModel<ItemTemplate> getItemTemplates() {
-        return itemTemplates;
+    public LazyDataModel<PurchasableItem> getItemList() {
+        return itemList;
     }
 
-    public List<ItemTemplate> getFilteredItems() {
+    public List<PurchasableItem> getFilteredItems() {
         return filteredItems;
     }
 
-    public void setFilteredItems(List<ItemTemplate> filteredItems) {
+    public void setFilteredItems(List<PurchasableItem> filteredItems) {
         this.filteredItems = filteredItems;
     }
 

@@ -1,20 +1,17 @@
 package com.chaouki.tcshop.controllers.dto;
 
 import com.chaouki.tcshop.entities.ItemTemplate;
+import com.chaouki.tcshop.entities.PurchasableItem;
 
 import java.math.BigDecimal;
 
 public class CartLine {
-    private ItemTemplate item;
+
     private Integer quantity;
-    private BigDecimal pricePerUnit;
+    private PurchasableItem purchasableItem;
 
-    public ItemTemplate getItem() {
-        return item;
-    }
-
-    public void setItem(ItemTemplate item) {
-        this.item = item;
+    public BigDecimal getSubtotal() {
+        return purchasableItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity));
     }
 
     public Integer getQuantity() {
@@ -25,15 +22,11 @@ public class CartLine {
         this.quantity = quantity;
     }
 
-    public BigDecimal getPricePerUnit() {
-        return pricePerUnit;
+    public PurchasableItem getPurchasableItem() {
+        return purchasableItem;
     }
 
-    public void setPricePerUnit(BigDecimal pricePerUnit) {
-        this.pricePerUnit = pricePerUnit;
-    }
-
-    public BigDecimal getSubtotal() {
-        return pricePerUnit.multiply(BigDecimal.valueOf(quantity));
+    public void setPurchasableItem(PurchasableItem purchasableItem) {
+        this.purchasableItem = purchasableItem;
     }
 }

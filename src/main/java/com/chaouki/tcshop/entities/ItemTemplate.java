@@ -45,12 +45,6 @@ public class ItemTemplate {
     @Column(name = "stackable")
     private Integer countPerStackMax;
 
-    @Column(name = "is_purchasable")
-    private boolean isPurchasable;
-
-    @Column(name = "current_unit_price")
-    private BigDecimal currentUnitPrice;
-
     public Integer getEntry() {
         return entry;
     }
@@ -91,11 +85,4 @@ public class ItemTemplate {
         return displayId;
     }
 
-    public boolean isPurchasable() {
-        return isPurchasable;
-    }
-
-    public BigDecimal getCurrentUnitPrice() {
-        return currentUnitPrice;
-    }
 }

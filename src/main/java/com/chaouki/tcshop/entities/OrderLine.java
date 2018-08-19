@@ -13,19 +13,16 @@ public class OrderLine {
 
     private Integer quantity;
 
-    @Column(name = "unit_price")
-    private BigDecimal unitPrice;
-
     @ManyToOne
-    private ItemTemplate item;
+    @JoinColumn(name = "purchasable_item_id")
+    private PurchasableItem purchasableItem;
 
     @ManyToOne
     private Order order;
 
     public BigDecimal getSubtotal() {
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+        return purchasableItem.getUnitPrice().multiply(BigDecimal.valueOf(quantity));
     }
-
 
     public Integer getId() {
         return id;
@@ -43,27 +40,19 @@ public class OrderLine {
         this.quantity = quantity;
     }
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public ItemTemplate getItem() {
-        return item;
-    }
-
-    public void setItem(ItemTemplate item) {
-        this.item = item;
-    }
-
     public Order getOrder() {
         return order;
     }
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public PurchasableItem getPurchasableItem() {
+        return purchasableItem;
+    }
+
+    public void setPurchasableItem(PurchasableItem purchasableItem) {
+        this.purchasableItem = purchasableItem;
     }
 }
