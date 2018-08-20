@@ -37,39 +37,41 @@ public class CharacterServiceImpl implements CharacterService {
             return;
         }
 
-        if(!enabled){
-            deleteCharacter(accountId, characterId);
-            return;
-        }
-
-        Account account = accountService.findById(accountId).orElseThrow(IllegalArgumentException::new);
+        Account account = accountService.findById(accountId).orElseGet(() -> accountService.createStubAccount(accountId));
+        Character character;
         if(savedCharacter.isPresent()) {
             // update character
 
-            Character character = savedCharacter.get();
+            character = savedCharacter.get();
             character.setAccount(account);
             character.setName(characterName);
             character.setCharacterClass(characterClass);
             character.setLastUpdateTimestamp(timestamp);
-            characterDao.save(character);
+            character.setDeleted(!enabled);
+            character = characterDao.save(character);
 
         } else {
             // create character
 
-            Character character = new Character();
+            character = new Character();
             character.setId(characterId);
             character.setAccount(account);
             character.setName(characterName);
             character.setCharacterClass(characterClass);
             character.setLastUpdateTimestamp(timestamp);
-            characterDao.save(character);
+            character.setDeleted(!enabled);
+            character = characterDao.save(character);
+        }
+
+        if(!enabled){
+            characterEquipmentService.deleteByCharacter(character);
         }
     }
 
     @Override
     public Optional<Character> findById(Integer id) {
         Optional<Character> characterOptional = characterDao.findById(id);
-        if(characterOptional.isPresent() && characterOptional.get().isDeleted())
+        if(characterOptional.isPresent() && (characterOptional.get().isDeleted() || characterOptional.get().isStub()))
             return Optional.empty();
 
         return characterOptional;
@@ -86,17 +88,15 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public void deleteCharacter(Integer accountId, Integer characterId) {
-        Character character = characterDao.findById(characterId).orElseThrow(IllegalArgumentException::new);
-
-        if(character.isDeleted())
-            return; // duplicate message. nothing to do then.
-
-        if(!character.getAccount().getId().equals(accountId))
-            throw new IllegalArgumentException("the character does not belong to the account provided");
-
-        characterEquipmentService.deleteByCharacter(character);
-        character.setDeleted(true);
-        characterDao.save(character);
+    public Character createStubCharacter(Integer characterId) {
+        Character character = new Character();
+        character.setId(characterId);
+        character.setAccount(accountService.findById(1).orElseThrow(IllegalStateException::new));
+        character.setName("STUB");
+        character.setCharacterClass(CharacterClass.getByIndex(1));
+        character.setLastUpdateTimestamp(LocalDateTime.of(2000, 1,1,0,0));
+        character.setDeleted(false);
+        character.setStub(true);
+        return characterDao.save(character);
     }
 }

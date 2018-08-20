@@ -1,9 +1,10 @@
 create table account
 (
-  id              int          not null primary key,
-  hashed_password varchar(255) not null,
-  username        varchar(255) not null,
-  last_update_timestamp datetime     not null
+  id                    int          not null primary key,
+  hashed_password       varchar(255) not null,
+  username              varchar(255) not null,
+  last_update_timestamp datetime     not null,
+  is_stub               bool         not null default 0
 );
 
 create index idx_username
@@ -15,9 +16,10 @@ create table character_
   name                       varchar(255) not null,
   character_class            tinyint      not null,
   account_id                 int          not null,
-  last_update_timestamp datetime     not null,
+  last_update_timestamp      datetime     not null,
   is_deleted                 bool         not null default 0,
   equipment_update_timestamp datetime     null,
+  is_stub                    bool         not null default 0,
 
   FOREIGN KEY FK_character_account (account_id) REFERENCES account (id)
 );

@@ -18,5 +18,5 @@ public interface CharacterService {
 
     List<Character> findActiveCharsByAccount(Account account);
 
-    void deleteCharacter(Integer accountId, Integer id);
+    Character createStubCharacter(Integer characterId);
 }

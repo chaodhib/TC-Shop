@@ -16,6 +16,9 @@ public class Account {
     @Column(name = "last_update_timestamp")
     private LocalDateTime lastUpdateTimestamp;
 
+    @Column(name = "is_stub")
+    private boolean isStub;
+
     public Integer getId() {
         return id;
     }
@@ -46,5 +49,13 @@ public class Account {
 
     public void setLastUpdateTimestamp(LocalDateTime lastUpdateTimestamp) {
         this.lastUpdateTimestamp = lastUpdateTimestamp;
+    }
+
+    public boolean isStub() {
+        return isStub;
+    }
+
+    public void setStub(boolean stub) {
+        isStub = stub;
     }
 }

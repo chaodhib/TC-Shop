@@ -12,4 +12,6 @@ public interface AccountService {
     Optional<Account> findById(Integer id);
 
     Account findByUsername(String username);
+
+    Account createStubAccount(Integer accountId);
 }
