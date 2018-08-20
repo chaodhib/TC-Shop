@@ -26,9 +26,10 @@ public class CharacterServiceImpl implements CharacterService {
     private CharacterEquipmentService characterEquipmentService;
 
     @Override
-    public void createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass) {
+    public void onCharacterMessage(Integer accountId, Integer characterId, LocalDateTime timestamp, String characterName, CharacterClass characterClass, boolean enabled) {
 
-        if(characterDao.findById(characterId).isPresent()){
+        Optional<Character> savedCharacter = characterDao.findById(characterId);
+        if(savedCharacter.isPresent() && savedCharacter.get().getLastUpdateTimestamp().compareTo(timestamp) >= 0) {
             // two case:
             // 1) it's an out of order situation: a delete character message was received before the creation character message.
             // 2) it's a duplicate: two creation messages were received. in that case, just ignore the second message.
@@ -36,14 +37,33 @@ public class CharacterServiceImpl implements CharacterService {
             return;
         }
 
-        Account account = accountService.findById(accountId).orElseThrow(IllegalArgumentException::new);
+        if(!enabled){
+            deleteCharacter(accountId, characterId);
+            return;
+        }
 
-        Character character = new Character();
-        character.setId(characterId);
-        character.setAccount(account);
-        character.setName(characterName);
-        character.setCharacterClass(characterClass);
-        characterDao.save(character);
+        Account account = accountService.findById(accountId).orElseThrow(IllegalArgumentException::new);
+        if(savedCharacter.isPresent()) {
+            // update character
+
+            Character character = savedCharacter.get();
+            character.setAccount(account);
+            character.setName(characterName);
+            character.setCharacterClass(characterClass);
+            character.setLastUpdateTimestamp(timestamp);
+            characterDao.save(character);
+
+        } else {
+            // create character
+
+            Character character = new Character();
+            character.setId(characterId);
+            character.setAccount(account);
+            character.setName(characterName);
+            character.setCharacterClass(characterClass);
+            character.setLastUpdateTimestamp(timestamp);
+            characterDao.save(character);
+        }
     }
 
     @Override

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -23,7 +25,7 @@ public class CharacterConsumer implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(CharacterConsumer.class);
 
     private final static String TOPIC = "CHARACTER";
-    private static final int PAYLOAD_TOKEN_NUMBER = 5;
+    private static final int PAYLOAD_TOKEN_NUMBER = 6;
 
     @Value("${kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVERS;
@@ -68,10 +70,7 @@ public class CharacterConsumer implements Runnable {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     CharacterDTO characterDTO = parseMessage(record.value());
-                    if(characterDTO.enabled)
-                        characterService.createCharacter(characterDTO.accountId, characterDTO.id, characterDTO.name, characterDTO.characterClass);
-                    else
-                        characterService.deleteCharacter(characterDTO.accountId, characterDTO.id);
+                    characterService.onCharacterMessage(characterDTO.accountId, characterDTO.id, characterDTO.timestamp, characterDTO.name, characterDTO.characterClass, characterDTO.enabled);
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on character message processing", e);
                 }
@@ -86,11 +85,13 @@ public class CharacterConsumer implements Runnable {
             throw new IllegalArgumentException(value + " payload is invalid for topic " + TOPIC);
 
         CharacterDTO characterDTO = new CharacterDTO();
-        characterDTO.accountId = Integer.valueOf(tokens[0]);
-        characterDTO.id = Integer.valueOf(tokens[1]);
-        characterDTO.name = tokens[2];
-        characterDTO.characterClass = CharacterClass.getByIndex(Integer.valueOf(tokens[3]));
-        characterDTO.enabled = "1".equals(tokens[4]);
+        characterDTO.id = Integer.valueOf(tokens[0]);
+        Long timestamp = Long.valueOf(tokens[1]);
+        characterDTO.timestamp = LocalDateTime.ofEpochSecond(timestamp / 1_000_000_000, (int) (timestamp % 1_000_000_000), ZoneOffset.UTC);
+        characterDTO.accountId = Integer.valueOf(tokens[2]);
+        characterDTO.name = tokens[3];
+        characterDTO.characterClass = CharacterClass.getByIndex(Integer.valueOf(tokens[4]));
+        characterDTO.enabled = "1".equals(tokens[5]);
         return characterDTO;
     }
 
@@ -102,6 +103,7 @@ public class CharacterConsumer implements Runnable {
     private class CharacterDTO {
         Integer id;
         Integer accountId;
+        LocalDateTime timestamp;
         String name;
         CharacterClass characterClass;
         boolean enabled;

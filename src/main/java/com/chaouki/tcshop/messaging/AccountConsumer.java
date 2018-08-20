@@ -2,7 +2,6 @@ package com.chaouki.tcshop.messaging;
 
 import com.chaouki.tcshop.services.AccountService;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -67,7 +68,7 @@ public class AccountConsumer implements Runnable {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     AccountDTO accountDTO = parseMessage(record.value());
-                    accountService.createAccount(accountDTO.id, accountDTO.username, accountDTO.hashedPassword);
+                    accountService.onAccountMessage(accountDTO.id, accountDTO.timestamp, accountDTO.username, accountDTO.hashedPassword);
 
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on account message processing", e);
@@ -79,13 +80,15 @@ public class AccountConsumer implements Runnable {
 
     private AccountDTO parseMessage(String value) {
         String[] tokens = value.split("#");
-        if (tokens.length != 3)
+        if (tokens.length != 4)
             throw new IllegalArgumentException(value + " payload is invalid for topic " + TOPIC);
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.id = Integer.valueOf(tokens[0]);
-        accountDTO.username = tokens[1];
-        accountDTO.hashedPassword = tokens[2];
+        Long timestamp = Long.valueOf(tokens[1]);
+        accountDTO.timestamp = LocalDateTime.ofEpochSecond(timestamp / 1_000_000_000, (int) (timestamp % 1_000_000_000), ZoneOffset.UTC);
+        accountDTO.username = tokens[2];
+        accountDTO.hashedPassword = tokens[3];
         return accountDTO;
     }
 
@@ -96,6 +99,7 @@ public class AccountConsumer implements Runnable {
 
     private class AccountDTO {
         Integer id;
+        LocalDateTime timestamp;
         String username;
         String hashedPassword;
     }

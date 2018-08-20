@@ -80,7 +80,8 @@ public class GearSnapshotConsumer implements Runnable {
 
         GearSnapshotDTO gearSnapshotDTO = new GearSnapshotDTO();
         gearSnapshotDTO.characterId = Integer.valueOf(tokens[0]);
-        gearSnapshotDTO.timestamp = LocalDateTime.ofEpochSecond(Long.valueOf(tokens[1]) / 1_000_000_000, 0, ZoneOffset.UTC);
+        Long timestamp = Long.valueOf(tokens[1]);
+        gearSnapshotDTO.timestamp = LocalDateTime.ofEpochSecond(timestamp / 1_000_000_000, (int) (timestamp % 1_000_000_000), ZoneOffset.UTC);
         HashMap<Integer, Integer> itemMap = new HashMap<>();
         for (int i = 2; i < tokens.length; i++) {
             String[] split = tokens[i].split(":");

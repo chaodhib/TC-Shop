@@ -28,6 +28,9 @@ public class Character {
     @Column(name = "is_deleted")
     private boolean deleted;
 
+    @Column(name = "last_update_timestamp")
+    private LocalDateTime lastUpdateTimestamp;
+
     public Integer getId() {
         return id;
     }
@@ -74,5 +77,13 @@ public class Character {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public LocalDateTime getLastUpdateTimestamp() {
+        return lastUpdateTimestamp;
+    }
+
+    public void setLastUpdateTimestamp(LocalDateTime lastUpdateTimestamp) {
+        this.lastUpdateTimestamp = lastUpdateTimestamp;
     }
 }

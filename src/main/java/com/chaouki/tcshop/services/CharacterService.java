@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CharacterService {
 
-    void createCharacter(Integer accountId, Integer characterId, String characterName, CharacterClass characterClass);
+    void onCharacterMessage(Integer accountId, Integer characterId, LocalDateTime timestamp, String characterName, CharacterClass characterClass, boolean enabled);
 
     Optional<Character> findById(Integer id);
 

@@ -13,6 +13,9 @@ public class Account {
     @Column(name = "hashed_password")
     private String hashedPassword;
 
+    @Column(name = "last_update_timestamp")
+    private LocalDateTime lastUpdateTimestamp;
+
     public Integer getId() {
         return id;
     }
@@ -35,5 +38,13 @@ public class Account {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public LocalDateTime getLastUpdateTimestamp() {
+        return lastUpdateTimestamp;
+    }
+
+    public void setLastUpdateTimestamp(LocalDateTime lastUpdateTimestamp) {
+        this.lastUpdateTimestamp = lastUpdateTimestamp;
     }
 }
