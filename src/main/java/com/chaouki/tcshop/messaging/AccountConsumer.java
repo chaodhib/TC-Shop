@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
 
 @Component
 public class AccountConsumer implements Runnable {
@@ -32,9 +31,6 @@ public class AccountConsumer implements Runnable {
 
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private CountDownLatch accountLatch;
 
     @PostConstruct
     public void init() {
@@ -58,11 +54,6 @@ public class AccountConsumer implements Runnable {
 
         while (true) {
             final ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofMillis(1000));
-            if(consumerRecords.isEmpty() && accountLatch.getCount() == 1){
-                accountLatch.countDown();
-                LOGGER.info("Initial Account processing finished");
-            }
-
             for (ConsumerRecord<String, String> record : consumerRecords) {
                 try {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
