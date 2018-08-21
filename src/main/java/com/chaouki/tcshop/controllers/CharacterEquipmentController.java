@@ -1,10 +1,7 @@
 package com.chaouki.tcshop.controllers;
 
-import com.chaouki.tcshop.entities.Account;
 import com.chaouki.tcshop.entities.Character;
 import com.chaouki.tcshop.entities.CharacterEquipment;
-import com.chaouki.tcshop.messaging.AccountConsumer;
-import com.chaouki.tcshop.services.AccountService;
 import com.chaouki.tcshop.services.CharacterEquipmentService;
 import com.chaouki.tcshop.services.CharacterService;
 import org.slf4j.Logger;
