@@ -9,9 +9,6 @@ import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.OrderLine;
 import com.chaouki.tcshop.entities.enums.OrderStatus;
 import com.chaouki.tcshop.messaging.GearPurchaseProducer;
-import com.stripe.Stripe;
-import com.stripe.exception.*;
-import com.stripe.model.Charge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +44,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private PaymentService paymentService;
-
-    @Value("${stripe.secret.key}")
-    String secretKey;
-
-    @PostConstruct
-    public void init() {
-        Stripe.apiKey = secretKey;
-        Stripe.setConnectTimeout(30 * 1000);
-        Stripe.setReadTimeout(30 * 1000);
-    }
 
     @Override
     public CreateOrderResult createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart) {

@@ -1,15 +1,18 @@
 package com.chaouki.tcshop.services;
 
 import com.chaouki.tcshop.entities.Order;
+import com.stripe.Stripe;
 import com.stripe.exception.CardException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Refund;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,16 @@ import java.util.Map;
 public class PaymentServiceImpl implements PaymentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
+    @Value("${stripe.secret.key}")
+    String secretKey;
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = secretKey;
+        Stripe.setConnectTimeout(30 * 1000);
+        Stripe.setReadTimeout(30 * 1000);
+    }
 
     @Override
     public String checkPaymentDetails(Order order, StripePaymentDetails paymentDetails, BigDecimal totalPrice) {
