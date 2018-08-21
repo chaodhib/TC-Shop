@@ -80,6 +80,15 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
+    public Optional<Character> findByIdIncludeStub(Integer id) {
+        Optional<Character> characterOptional = characterDao.findById(id);
+        if(characterOptional.isPresent() && characterOptional.get().isDeleted())
+            return Optional.empty();
+
+        return characterOptional;
+    }
+
+    @Override
     public void onEquipmentUpdate(Character character, LocalDateTime timestamp) {
         characterDao.setEquipmentUpdateTimestamp(character, timestamp);
     }

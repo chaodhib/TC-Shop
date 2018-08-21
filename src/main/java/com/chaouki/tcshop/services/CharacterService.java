@@ -14,6 +14,8 @@ public interface CharacterService {
 
     Optional<Character> findById(Integer id);
 
+    Optional<Character> findByIdIncludeStub(Integer id);
+
     void onEquipmentUpdate(Character character, LocalDateTime timestamp);
 
     List<Character> findActiveCharsByAccount(Account account);
