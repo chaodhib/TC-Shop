@@ -11,7 +11,7 @@ public class KafkaConfig {
     @Bean
     public AsyncTaskExecutor taskExecutor(){
         SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-        taskExecutor.setConcurrencyLimit(5);
+        taskExecutor.setConcurrencyLimit(2);
         return taskExecutor;
     }
 }
