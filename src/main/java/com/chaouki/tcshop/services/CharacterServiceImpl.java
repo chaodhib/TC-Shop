@@ -48,6 +48,7 @@ public class CharacterServiceImpl implements CharacterService {
             character.setCharacterClass(characterClass);
             character.setLastUpdateTimestamp(timestamp);
             character.setDeleted(!enabled);
+            character.setStub(false);
             character = characterDao.save(character);
 
         } else {
@@ -60,6 +61,7 @@ public class CharacterServiceImpl implements CharacterService {
             character.setCharacterClass(characterClass);
             character.setLastUpdateTimestamp(timestamp);
             character.setDeleted(!enabled);
+            character.setStub(false);
             character = characterDao.save(character);
         }
 

@@ -30,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
             account.setLastUpdateTimestamp(timestamp);
             account.setUsername(username);
             account.setHashedPassword(hashedPassword);
+            account.setStub(false);
             accountDao.save(account);
 
         } else {
@@ -38,6 +39,7 @@ public class AccountServiceImpl implements AccountService {
             account.setLastUpdateTimestamp(timestamp);
             account.setUsername(username);
             account.setHashedPassword(hashedPassword);
+            account.setStub(false);
             accountDao.save(account);
         }
     }
