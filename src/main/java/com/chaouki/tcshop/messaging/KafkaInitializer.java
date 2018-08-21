@@ -15,22 +15,10 @@ public class KafkaInitializer {
     private AsyncTaskExecutor taskExecutor;
 
     @Autowired
-    private AccountConsumer accountConsumer;
-
-    @Autowired
-    private CharacterConsumer characterConsumer;
-
-    @Autowired
-    private GearSnapshotConsumer gearSnapshotConsumer;
-
-    @Autowired
-    private GearPurchaseAckConsumer gearPurchaseAckConsumer;
+    private TopicsConsumer topicsConsumer;
 
     @PostConstruct
     public void init(){
-        taskExecutor.submit(accountConsumer);
-        taskExecutor.submit(characterConsumer);
-        taskExecutor.submit(gearSnapshotConsumer);
-        taskExecutor.submit(gearPurchaseAckConsumer);
+        taskExecutor.submit(topicsConsumer);
     }
 }
