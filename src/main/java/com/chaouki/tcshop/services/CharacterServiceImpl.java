@@ -91,7 +91,7 @@ public class CharacterServiceImpl implements CharacterService {
     public Character createStubCharacter(Integer characterId) {
         Character character = new Character();
         character.setId(characterId);
-        character.setAccount(accountService.findById(1).orElseThrow(IllegalStateException::new));
+        character.setAccount(accountService.findById(Integer.MAX_VALUE).orElseThrow(IllegalStateException::new));
         character.setName("STUB");
         character.setCharacterClass(CharacterClass.getByIndex(1));
         character.setLastUpdateTimestamp(LocalDateTime.of(2000, 1,1,0,0));
