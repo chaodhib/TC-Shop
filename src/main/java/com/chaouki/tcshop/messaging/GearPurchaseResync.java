@@ -3,6 +3,8 @@ package com.chaouki.tcshop.messaging;
 import com.chaouki.tcshop.dao.OrderDao;
 import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.enums.OrderStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,14 +15,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class GearPurchaseResync {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GearPurchaseProducer.class);
+
     @Autowired
     private GearPurchaseProducer gearPurchaseProducer;
 
     @Autowired
     private OrderDao orderDao;
 
-    @Scheduled(fixedRate = 1000 * 3600, initialDelay = 0) // starts first execution as possible. then execute each hour.
+    @Scheduled(fixedRate = 1000 * 3600, initialDelay = 0) // starts first execution as soon as possible. then execute each hour.
     public void syncPendingGearPurchaseMessages() {
+
+        LOGGER.info("Syncing pending gear purchase messages");
+
         Page<Order> orderPage;
         int page = 0;
         do {
