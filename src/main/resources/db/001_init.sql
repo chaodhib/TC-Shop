@@ -7,7 +7,7 @@ create table account
   is_stub               bool         not null default 0
 );
 
-create index idx_username
+create unique index idx_username
   on account (username);
 
 create table character_
@@ -35,7 +35,7 @@ create table item_template
   inventory_type tinyint unsigned default '0'     not null,
   item_level     smallint(5) unsigned default '0' not null,
   required_level tinyint unsigned default '0'     not null,
-  stackable      int default '1'                  null
+  stackable      int default '1'                  not null
 );
 
 create index idx_name
