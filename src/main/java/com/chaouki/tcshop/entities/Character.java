@@ -26,7 +26,7 @@ public class Character {
     private LocalDateTime equipmentUpdateTimestamp;
 
     @Column(name = "is_deleted")
-    private boolean deleted;
+    private boolean isDeleted;
 
     @Column(name = "last_update_timestamp")
     private LocalDateTime lastUpdateTimestamp;
@@ -75,11 +75,11 @@ public class Character {
     }
 
     public boolean isDeleted() {
-        return deleted;
+        return isDeleted;
     }
 
     public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+        this.isDeleted = deleted;
     }
 
     public LocalDateTime getLastUpdateTimestamp() {
