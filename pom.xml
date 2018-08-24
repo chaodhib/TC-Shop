@@ -95,6 +95,12 @@
             <artifactId>stripe-java</artifactId>
             <version>6.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
 	<build>
@@ -131,11 +137,6 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>primefaces-maven-repository</id>
-            <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
         </repository>
     </repositories>
 </project>
