@@ -109,6 +109,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void flagOrderAsAcceptedByMessageBroker(Order order) {
+        // special rare case when the GEAR_PURCHASE_ACK is processed before the callback of the GEAR_PURCHASE message.
+        if(order.getStatus().equals(OrderStatus.DELIVERED) || order.getStatus().equals(OrderStatus.DELIVERY_FAILED))
+            return;
+
         if(!order.getStatus().equals(OrderStatus.SENDING))
             throw new IllegalStateException("orderId " +order.getId());
 
@@ -124,7 +128,8 @@ public class OrderServiceImpl implements OrderService {
         if(order.getStatus().equals(OrderStatus.DELIVERED))
             return;
 
-        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION))
+        // special rare case when the GEAR_PURCHASE_ACK is processed before the callback of the GEAR_PURCHASE message.
+        if(!order.getStatus().equals(OrderStatus.WAITING_FOR_CONFIRMATION) && !order.getStatus().equals(OrderStatus.SENDING))
             throw new IllegalStateException("orderId " +order.getId());
 
         order.setStatus(OrderStatus.DELIVERED);
