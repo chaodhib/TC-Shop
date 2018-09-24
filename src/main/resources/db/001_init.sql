@@ -7,7 +7,7 @@ create table account
   is_stub               bool         not null default 0
 );
 
-create unique index idx_username
+create index idx_username
   on account (username);
 
 create table character_
