@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 @Component
@@ -59,8 +61,8 @@ public class AccountConsumer implements Runnable {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     AccountDTO accountDTO = parseMessage(record.value());
-                    accountService.onAccountMessage(accountDTO.id, accountDTO.timestamp, accountDTO.username, accountDTO.hashedPassword);
-
+                    Runnable todo = () -> accountService.onAccountMessage(accountDTO.id, accountDTO.timestamp, accountDTO.username, accountDTO.hashedPassword);
+                    MessagingUtils.doAndRetry(todo, 5);
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on account message processing", e);
                 }

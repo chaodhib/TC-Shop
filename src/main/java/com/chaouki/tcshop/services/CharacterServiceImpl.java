@@ -7,6 +7,7 @@ import com.chaouki.tcshop.entities.enums.CharacterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +27,7 @@ public class CharacterServiceImpl implements CharacterService {
     private CharacterEquipmentService characterEquipmentService;
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void onCharacterMessage(Integer accountId, Integer characterId, LocalDateTime timestamp, String characterName, CharacterClass characterClass, boolean enabled) {
 
         Optional<Character> savedCharacter = characterDao.findById(characterId);

@@ -4,6 +4,7 @@ import com.chaouki.tcshop.dao.AccountDao;
 import com.chaouki.tcshop.entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.util.Assert;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao;
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void onAccountMessage(Integer id, LocalDateTime timestamp, String username, String hashedPassword) {
 
         Optional<Account> savedAccount = accountDao.findById(id);

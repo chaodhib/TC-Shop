@@ -61,7 +61,8 @@ public class CharacterConsumer implements Runnable {
                     LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset(), TOPIC);
 
                     CharacterDTO characterDTO = parseMessage(record.value());
-                    characterService.onCharacterMessage(characterDTO.accountId, characterDTO.id, characterDTO.timestamp, characterDTO.name, characterDTO.characterClass, characterDTO.enabled);
+                    Runnable todo = () -> characterService.onCharacterMessage(characterDTO.accountId, characterDTO.id, characterDTO.timestamp, characterDTO.name, characterDTO.characterClass, characterDTO.enabled);
+                    MessagingUtils.doAndRetry(todo, 5);
                 } catch (RuntimeException e) {
                     LOGGER.error("exception raised on character message processing", e);
                 }
