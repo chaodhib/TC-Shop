@@ -15,7 +15,4 @@ public interface CharacterDao extends JpaRepository<Character, Integer> {
     @Query("SELECT charact FROM Character charact WHERE charact.account = ?1 AND charact.isDeleted = 0 AND charact.isStub = 0")
     List<Character> findActiveCharsByAccount(Account account);
 
-    @Modifying
-    @Query("UPDATE Character char SET equipmentUpdateTimestamp = ?2 WHERE char = ?1")
-    void setEquipmentUpdateTimestamp(Character character, LocalDateTime timestamp);
 }

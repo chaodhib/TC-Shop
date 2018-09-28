@@ -3,10 +3,7 @@ package com.chaouki.tcshop.messaging;
 import com.chaouki.tcshop.entities.Order;
 import com.chaouki.tcshop.entities.OrderLine;
 import com.chaouki.tcshop.services.OrderService;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +28,6 @@ public class GearPurchaseProducer {
 
     private Producer<String, String> producer;
 
-    @Autowired
-    private OrderService orderService;
-
     @PostConstruct
     public void init() {
 
@@ -55,15 +49,10 @@ public class GearPurchaseProducer {
         producer.close();
     }
 
-    public void sendGearPurchaseMessage(Order order) {
+    public void sendGearPurchaseMessage(Order order, Callback callback) {
         final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, constructMessage(order));
         LOGGER.info("Consumer Record:({}, {}, {}, {}, {})", record.key(), record.value(), record.partition(), null, TOPIC);
-        producer.send(record, (metadata, exception) -> {
-            if(exception == null)
-                orderService.flagOrderAsAcceptedByMessageBroker(order);
-            else
-                LOGGER.warn("Could not send Gear Purchase message to the broker", exception);
-        });
+        producer.send(record, callback);
     }
 
     private String constructMessage(Order order) {

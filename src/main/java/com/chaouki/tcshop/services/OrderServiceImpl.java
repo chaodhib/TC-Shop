@@ -11,21 +11,16 @@ import com.chaouki.tcshop.entities.enums.OrderStatus;
 import com.chaouki.tcshop.messaging.GearPurchaseProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
-import java.math.BigDecimal;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -33,17 +28,17 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-    @Autowired
     private OrderDao orderDao;
-
-    @Autowired
     private CharacterService characterService;
-
-    @Autowired
     private GearPurchaseProducer gearPurchaseProducer;
-
-    @Autowired
     private PaymentService paymentService;
+
+    public OrderServiceImpl(OrderDao orderDao, CharacterService characterService, GearPurchaseProducer gearPurchaseProducer, PaymentService paymentService) {
+        this.orderDao = orderDao;
+        this.characterService = characterService;
+        this.gearPurchaseProducer = gearPurchaseProducer;
+        this.paymentService = paymentService;
+    }
 
     @Override
     public CreateOrderResult createOrder(Integer characterId, StripePaymentDetails paymentDetails, Cart cart) {
@@ -104,7 +99,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void deliverItems(Order order) {
-        gearPurchaseProducer.sendGearPurchaseMessage(order);
+        gearPurchaseProducer.sendGearPurchaseMessage(order, (metadata, exception) -> {
+            if (exception == null)
+                flagOrderAsAcceptedByMessageBroker(order);
+            else
+                LOGGER.warn("Could not send Gear Purchase message to the broker", exception);
+        });
     }
 
     @Override

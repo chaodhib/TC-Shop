@@ -17,14 +17,13 @@ import java.util.Optional;
 @Transactional
 public class CharacterServiceImpl implements CharacterService {
 
-    @Autowired
     private CharacterDao characterDao;
-
-    @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private CharacterEquipmentService characterEquipmentService;
+    public CharacterServiceImpl(CharacterDao characterDao, AccountService accountService) {
+        this.characterDao = characterDao;
+        this.accountService = accountService;
+    }
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -66,10 +65,6 @@ public class CharacterServiceImpl implements CharacterService {
             character.setStub(false);
             character = characterDao.save(character);
         }
-
-        if(!enabled){
-            characterEquipmentService.deleteByCharacter(character);
-        }
     }
 
     @Override
@@ -92,7 +87,8 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public void onEquipmentUpdate(Character character, LocalDateTime timestamp) {
-        characterDao.setEquipmentUpdateTimestamp(character, timestamp);
+        character.setEquipmentUpdateTimestamp(timestamp);
+        characterDao.save(character);
     }
 
     @Override

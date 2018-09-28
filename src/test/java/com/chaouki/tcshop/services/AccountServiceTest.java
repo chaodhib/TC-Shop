@@ -32,7 +32,7 @@ public class AccountServiceTest {
     @Sql("/sql/cleanAllTables.sql")
     @Test
     public void onAccountMessage() {
-        Assert.assertThat(accountDao.count(), is(0L));
+        Assert.assertThat(accountDao.count(), is(1L)); // there is a static stub account
 
         final int accountId = 1;
         final LocalDateTime timestamp = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
@@ -41,7 +41,7 @@ public class AccountServiceTest {
         accountService.onAccountMessage(accountId, timestamp, username, pwd);
 
         List<Account> accountList = accountDao.findAll();
-        Assert.assertThat(accountList.size(), is(1));
+        Assert.assertThat(accountList.size(), is(2));
         Account savedAccount = accountList.get(0);
         Assert.assertThat(savedAccount.getId(), is(accountId));
         Assert.assertThat(savedAccount.getUsername(), is(username));
@@ -87,13 +87,13 @@ public class AccountServiceTest {
     @Sql("/sql/cleanAllTables.sql")
     @Test
     public void createStubAccount() {
-        Assert.assertThat(accountDao.count(), is(0L));
+        Assert.assertThat(accountDao.count(), is(1L));  // there is a static stub account
 
         final int accountId = 1;
         accountService.createStubAccount(accountId);
 
         List<Account> accountList = accountDao.findAll();
-        Assert.assertThat(accountList.size(), is(1));
+        Assert.assertThat(accountList.size(), is(2));
         Account savedAccount = accountList.get(0);
         Assert.assertThat(savedAccount.getId(), is(accountId));
         Assert.assertThat(savedAccount.getUsername(), is(AccountServiceImpl.STUB_ACCOUNT));
