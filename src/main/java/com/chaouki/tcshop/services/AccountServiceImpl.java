@@ -16,8 +16,12 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
 
     public static final String STUB_ACCOUNT = "STUB@ACCOUNT";
-    @Autowired
+
     private AccountDao accountDao;
+
+    public AccountServiceImpl(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -53,10 +57,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByUsername(String username) {
-        if(STUB_ACCOUNT.equals(username))
-            throw new IllegalArgumentException("this username is reserved");
+        Optional<Account> optionalAccount = accountDao.findByUsername(username);
+        if(!optionalAccount.isPresent() || optionalAccount.get().isStub())
+            throw new IllegalArgumentException();
 
-        return accountDao.findByUsername(username).orElseThrow(IllegalArgumentException::new);
+        return optionalAccount.get();
     }
 
     @Override
