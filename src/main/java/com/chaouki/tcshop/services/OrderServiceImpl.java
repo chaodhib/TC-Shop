@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
             for (int i = 0; i < nbOfStacks; i++) {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setPurchasableItem(cartLine.getPurchasableItem());
-                orderLine.setQuantity(cartLine.getQuantity());
+                orderLine.setQuantity(countPerStackMax);
                 orderLine.setOrder(order);
                 orderLines.add(orderLine);
             }
@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Integer id) {
-        return orderDao.findById(id).orElseThrow(() -> new IllegalStateException("orderId " + id));
+        return orderDao.findById(id).orElseThrow(() -> new IllegalArgumentException("orderId " + id));
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.chaouki.tcshop.controllers;
 
 import com.chaouki.tcshop.controllers.dto.Cart;
 import com.chaouki.tcshop.controllers.dto.CartLine;
-import com.chaouki.tcshop.entities.ItemTemplate;
 import com.chaouki.tcshop.entities.PurchasableItem;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -25,7 +23,7 @@ public class CartController implements Serializable {
     }
 
     public void addItem(PurchasableItem purchasableItem) {
-        cart.add(purchasableItem, 1, purchasableItem.getUnitPrice());
+        cart.add(purchasableItem, 1);
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",  "The selected item has been added to your cart") );
     }

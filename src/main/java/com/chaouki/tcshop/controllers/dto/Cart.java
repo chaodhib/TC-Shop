@@ -19,7 +19,7 @@ public class Cart {
         return cartLines;
     }
 
-    public void add(PurchasableItem purchasableItem, int addQuantity, BigDecimal itemPricePerUnit) {
+    public void add(PurchasableItem purchasableItem, int addQuantity) {
         for (CartLine cartLine : cartLines) {
             if(cartLine.getPurchasableItem().getItemTemplate().getEntry().equals(purchasableItem.getItemTemplate().getEntry())) {
                 cartLine.setQuantity(cartLine.getQuantity() + addQuantity);

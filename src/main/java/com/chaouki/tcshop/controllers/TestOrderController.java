@@ -7,7 +7,6 @@ import com.chaouki.tcshop.services.StripePaymentDetailsStub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -23,7 +22,7 @@ public class TestOrderController {
     public String testOrder(@RequestBody OrderDTO orderDTO) {
         Cart cart = new Cart();
         for (CartLineDTO cartLineDTO : orderDTO.getCart().getCartLineList()) {
-            cart.add(purchasableItemService.findById(cartLineDTO.purchasableItemId).get(), cartLineDTO.quantity, BigDecimal.ZERO);
+            cart.add(purchasableItemService.findById(cartLineDTO.purchasableItemId).get(), cartLineDTO.quantity);
         }
         return orderService.createOrder(orderDTO.getCharacterId(), new StripePaymentDetailsStub(), cart).getStatus().getLabel();
     }
